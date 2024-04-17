@@ -1,0 +1,86 @@
+<div class="card">
+	{form form}
+		<div class="card-body">
+			<div class="form-group row">
+				<div class="col-sm-3 col-form-label">
+					{label login}
+					{icon star, danger, sm}
+				</div>
+				<div class="col-sm-9">
+					{input login}
+					{if $form['login']->hasErrors()}
+						<span class="error invalid-feedback">{$form['login']->getError()}</span>
+					{/if}
+				</div>
+			</div>
+			{ifset $form['password']}
+				<div class="form-group row">
+					<div class="col-sm-3 col-form-label">
+						{label password}
+						{icon star, danger, sm}
+					</div>
+					<div class="col-sm-9">
+						{input password}
+						{if $form['password']->hasErrors()}
+							<span class="error invalid-feedback">{$form['password']->getError()}</span>
+						{/if}
+					</div>
+				</div>
+			{/ifset}
+			<div class="form-group row">
+				<div class="col-sm-3 col-form-label">
+					{label firstname}
+					{icon star, danger, sm}
+				</div>
+				<div class="col-sm-9">
+					{input firstname}
+					{if $form['firstname']->hasErrors()}
+						<span class="error invalid-feedback">{$form['firstname']->getError()}</span>
+					{/if}
+				</div>
+			</div>
+			<div class="form-group row">
+				<div class="col-sm-3 col-form-label">
+					{label lastname}
+					{icon star, danger, sm}
+				</div>
+				<div class="col-sm-9">
+					{input lastname}
+					{if $form['lastname']->hasErrors()}
+						<span class="error invalid-feedback">{$form['lastname']->getError()}</span>
+					{/if}
+				</div>
+			</div>
+			<div class="form-group row">
+				<div class="col-sm-3 col-form-label">
+					{label email}
+					{icon star, danger, sm}
+				</div>
+				<div class="col-sm-9">
+					{input email}
+					{if $form['email']->hasErrors()}
+						<span class="error invalid-feedback">{$form['email']->getError()}</span>
+					{/if}
+				</div>
+			</div>
+			<div class="form-group row">
+				<div class="col-sm-3 col-form-label">
+					{label role}
+				</div>
+				<div class="col-sm-9">
+					{foreach $form['role']->getItems() as $key => $name}
+						<div class="custom-control custom-checkbox">
+							{input $form['role']:$key:, class => 'custom-control-input'}
+							{label $form['role']:$key, class => 'custom-control-label'}
+						</div>
+					{/foreach}
+				</div>
+			</div>
+		</div>
+		<div class="card-footer">
+			<button class="btn btn-success">
+				Uložit
+			</button>
+		</div>
+	{/form}
+</div>

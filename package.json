@@ -1,0 +1,57 @@
+{
+  "name": "2018-03-nette-webpack",
+  "version": "1.0.0",
+  "description": "Nette Framework + Webpack 4",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trainit/2018-03-nette-webpack.git"
+  },
+  "keywords": [
+    "nette",
+    "framework",
+    "webpack"
+  ],
+  "author": "Milan Felix Sulc",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/trainit/2018-03-nette-webpack/issues"
+  },
+  "homepage": "https://github.com/trainit/2018-03-nette-webpack#readme",
+  "dependencies": {
+    "admin-lte": "^3.0.4",
+    "bootstrap": "^4.3.1",
+    "bootstrap-datepicker": "^1.9.0",
+    "bootstrap-select": "^1.13.12",
+    "codemirror": "^5.43.0",
+    "jquery": "^3.3.1",
+    "jquery-autocomplete": "^1.2.8",
+    "jquery-ui": "^1.12.1",
+    "moment": "^2.24.0",
+    "nette-forms": "^2.4.9",
+    "nette.ajax.js": "^2.3.0",
+    "selectize-bootstrap4-theme": "^2.0.2",
+    "ublaboo-datagrid": "^6.2.16",
+    "webpack": "^4.29.5"
+  },
+  "devDependencies": {
+    "@popperjs/core": "^2.0.6",
+    "@fortawesome/fontawesome-free": "^5.13.0",
+    "clean-webpack-plugin": "^2.0.1",
+    "css-loader": "^0.28.11",
+    "expose-loader": "^0.7.5",
+    "file-loader": "^1.1.11",
+    "font-awesome-loader": "^1.0.2",
+    "mini-css-extract-plugin": "^0.4.5",
+    "optimize-css-assets-webpack-plugin": "^5.0.1",
+    "perfect-scrollbar": "^1.4.0",
+    "style-loader": "^0.20.3",
+    "tempusdominus-bootstrap-4": "^5.1.2",
+    "url-loader": "^1.1.2",
+    "webpack-cli": "^3.2.1",
+    "terser-webpack-plugin": "^2.3.2"
+  },
+  "scripts": {
+    "dev": "webpack --mode development --watch --progress",
+    "build": "webpack --mode production"
+  }
+}

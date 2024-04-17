@@ -1,0 +1,94 @@
+{layout '../@layout.latte'}
+
+{block content}
+<center>
+<table>
+	<tbody>
+		<tr>
+			<td>
+				<table cellspacing="0" cellpadding="0" class="rozpis">
+					<thead>
+						<tr>
+							<td style="width: 30px;">&nbsp;</td>
+							<td class="rozpis_ct">&nbsp;</td>
+							{foreach $termArray as $term => $available}
+								<td colspan="2" class="{if $available}rozpis_dny{else}rozpis_dny_mimo{/if}">{$term|date:'d.m.'}</td>
+							{/foreach}
+						</tr>
+					</thead>
+					<tbody>
+						{foreach $teamArray as $teamId => $teamName}
+							{continueIf !isset($playerArray[$teamId])}
+							<tr>
+								<td style="background-color: orange;font-weight:bold;" rowspan="{count($playerArray[$teamId])}">
+									{$teamName}
+								</td>
+								{foreach $playerArray[$teamId] as $playerId => $player}
+									<td class="rozpis_clovekA">{$player}</td>
+									{foreach $termArray as $term => $available}
+										{if $available}
+											<td style="border-right:1px solid gray;" class="rozpis_ct yes ">
+												<span id="{php echo '_' . $playerId . '-' . $term . '_2';}">
+													<a href="javascript:void(0);" onclick="pp3.select('{$term}', '{$playerId}', '{php echo '_' . $playerId . '-' . $term . '_2'}');" class="yes">
+														{ifset $attendanceArray[$term][$playerId]}
+															{var $icon = \Admin\Dial\AttendanceTypeDial::translateIcon($attendanceArray[$term][$playerId]->type)}
+															<img src="{$basePath}/images/{$icon}">
+														{else}
+															<img src="{$basePath}/images/question.jpg">
+														{/ifset}
+													</a>
+												</span>
+											</td>
+											<td style="border-left:0px solid gray;" class="rozpis_pivo_ct ">
+												<span id="_5-1641164400">
+													<a href="javascript:void(0);" onclick="pp2.select('1641164400', '5', '_5-1641164400');" class="nevim_pivo">
+														{ifset $attendanceArray[$term][$playerId]}
+															{var $icon = \Admin\Dial\AttendanceReasonDial::translateIcon($attendanceArray[$term][$playerId]->reason)}
+															<img src="{$basePath}/images/{$icon}">
+														{else}
+															<img src="{$basePath}/images/question.jpg">
+														{/ifset}
+													</a>
+												</span>
+											</td>
+										{else}
+											<td colspan="2" class="volejbal_neni">Vol. neni</td>
+										{/if}
+									{/foreach}
+								</tr>
+								{/foreach}
+						{/foreach}
+						<tr>
+							<td>&nbsp;</td>
+							<td class="rozpis_ct">Počet</td>
+							{foreach $termArray as $term => $available}
+								{if $available}
+									<td style="border-right:1px solid gray;padding:3px;">{$termAttendanceCountArray[$term]}</td>
+									<td style="border-left:0px solid gray;padding:3px;">{$termReasonCountArray[$term]}</td>
+								{else}
+									<td colspan="2" class="volejbal_neni rozpis_dny_mimo">Vol. neni</td>
+								{/if}
+							{/foreach}
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td style="font-size: 80%;">
+				<div style="text-align: left;">
+					<span style="font-size: 80%;">
+						<span style="font-weight: bold;">*</span>
+						Potvrzovat účast nebo neúčast můžete i za kámoše (; .
+					</span>
+					<br>
+					<span style="font-size: 80%;">
+						<span style="font-weight: bold;">*</span>
+						Deadline pro přihlašování (tj. kdy už to musí být jasné): <strong>Pondělí 20:00</strong>
+					</span>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</center>

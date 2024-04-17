@@ -1,0 +1,32 @@
+{form form}
+	<div class="container login-container">
+		<div class="row">
+			<div class="col-md-12 login-form-1">
+				<div class="row">
+					<div class="col-md-6 col-12 p-3 text-center" style="margin-top: 5%;">
+						<h3>Přihlášení</h3>
+						<div class="form-group">
+							{input login}
+							{if $form['login']->hasErrors()}
+								<span class="error invalid-feedback">{$form['login']->getError()}</span>
+							{/if}
+						</div>
+						<div class="form-group">
+							{input password}
+							{if $form['password']->hasErrors()}
+								<span class="error invalid-feedback">{$form['password']->getError()}</span>
+							{/if}
+						</div>
+						<div class="form-group row">
+							<input type="submit" class="btn btn-primary" style="width: 50%;" value="Přihlásit" />
+							<a class="btn btn-warning" href="{plink :User:Login:reset}" style="width: 50%;">Zapomenuté heslo</a>
+						</div>
+					</div>
+					<div class="col-md-6 col-none">
+						<img src="{$basePath}/image/logo.png">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{/form}

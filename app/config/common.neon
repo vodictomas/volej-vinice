@@ -1,0 +1,50 @@
+parameters:
+	wwwDir: %appDir%/../www
+	tempDir: %wwwDir%/../www
+
+application:
+	errorPresenter: Error
+	mapping:
+		*: *Module\*Presenter
+
+session:
+	expiration: 14 days
+	debugger: true
+
+tracy:
+	email: kravcik.pavel@gmail.com
+	fromEmail: hospodareni@futsalpm.cz
+
+services:
+	router: App\Router\RouterFactory::createRouter()
+	authenticator: User\Model\UserManager
+
+http:
+	headers:
+		X-Powered-By: http://vodickatomas.cz
+
+routing:
+	cache: false
+
+security:
+	debugger: true
+
+
+forms:
+	messages:
+		FILLED : Vyplňte chybějící údaj
+		MIN_LENGTH : Údaj musí mít nejméně %d znaků
+		MAX_LENGTH : Maximální délka je %d znaků
+		LENGTH : Délka údaje musí být mezi %d a %d znaky
+		EMAIL : Vložte adresu ve správném tvaru
+		URL : Vložte URL ve správném tvaru
+		INTEGER : Zadaná hodnota musí být číslo
+		FLOAT : Zadaná hodnota musí být číselná
+		RANGE : Vložte hodnotu mezi %d a %d
+		MAX_FILE_SIZE : Maximální velikost nahraného souboru je %d bytů
+		IMAGE : Nahraný obrázek musí být ve formátu JPEG GIF nebo PNG
+		MIME_TYPE : Nahraný soubor není v podporovaném formátu
+
+latte:
+	macros:
+		- Kravcik\Macros\FontAwesomeMacro
