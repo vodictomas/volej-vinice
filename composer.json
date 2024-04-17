@@ -1,33 +1,45 @@
 {
-	"name": "nette/web-project",
-	"description": "Nette: Standard Web Project",
+	"name": "vodicka/volej-vinice",
+	"description": "Attendance list for volleyball",
 	"keywords": ["nette"],
 	"type": "project",
 	"license": ["MIT", "BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
 	"require": {
-		"php": ">= 7.3",
+		"php": ">= 8.2",
 		"nette/application": "^3.0",
 		"nette/bootstrap": "^3.0",
 		"nette/caching": "^3.0",
 		"nette/database": "^3.0",
-		"nette/di": "^3.0",
-		"nette/finder": "^2.5",
-		"nette/forms": "^3.0",
+		"nette/di": "^3.1",
 		"nette/http": "^3.0",
-		"nette/mail": "^3.0",
-		"nette/robot-loader": "^3.0",
-		"nette/security": "^3.0",
-		"nette/utils": "^3.0",
-		"latte/latte": "^2.5",
-		"tracy/tracy": "^2.6",
-		"kravcik/nette-macro-fontawesome": "^3.0",
-		"ublaboo/datagrid": "^6.9"
+		"nette/mail": "^3.1",
+		"nette/robot-loader": "^4.0",
+		"nette/security": "^3.1",
+		"nette/utils": "^4.0",
+		"latte/latte": "^3.0",
+		"tracy/tracy": "^2.7",
+		"kravcik/latte-font-awesome-icon": "^1",
+		"ublaboo/datagrid": "^6.9",
+		"modul-is/form": "^1",
+		"composer/composer": "^2.0",
+        "contributte/webpack": "^2.1"
 	},
 	"require-dev": {
-		"nette/tester": "^2.0",
-		"modul-is/coding-standard": "^2"
+        "modul-is/coding-standard": "^4",
+        "phpstan/phpstan": "^1",
+        "phpstan/phpstan-nette": "1"
 	},
 	"autoload": {
 		"classmap": ["app/Bootstrap.php"]
-	}
+	},
+	"config": {
+        "preferred-install": "dist",
+        "optimize-autoloader": true,
+        "platform": {
+            "php": "8.2.4"
+        },
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+    }
 }
