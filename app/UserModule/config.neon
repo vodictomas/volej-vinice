@@ -1,0 +1,2 @@
+services:
+	- User\Form\ILoginFormFactory

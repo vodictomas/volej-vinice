@@ -1,0 +1,29 @@
+<div class="card">
+	{form form}
+		<div class="card-body">
+			<div class="form-group row">
+				<div class="col-sm-3 col-form-label">
+					{label name}
+					{icon star, danger, sm}
+				</div>
+				<div class="col-sm-9">
+					{input name}
+					{if $form['name']->hasErrors()}
+						<span class="error invalid-feedback">{$form['name']->getError()}</span>
+					{/if}
+				</div>
+			</div>
+			<div class="form-group row">
+				<div class="custom-control custom-checkbox offset-md-4">
+					{input active:, class => 'custom-control-input'}
+					{label active:, class => 'custom-control-label'}
+				</div>
+			</div>
+		</div>
+		<div class="card-footer">
+			<button name="save" class="btn btn-success">
+				Uložit tým
+			</button>
+		</div>
+	{/form}
+</div>

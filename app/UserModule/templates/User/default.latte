@@ -1,0 +1,14 @@
+{define header}
+	{icon user}
+	Přehled zákazníků
+{/define}
+
+{define toolbox}
+	<a n:href=":User:User:userForm" class="btn btn-outline-primary">
+		{icon user}
+		Přidat zákazníka
+	</a>
+{/define}
+
+{block content}
+	{control userGrid}

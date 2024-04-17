@@ -1,0 +1,19 @@
+{define header}
+	{icon user}
+	{if $id}
+		Úprava
+	{else}
+		Vytvoření
+	{/if}
+	zákazníka
+{/define}
+
+{define toolbox}
+	<a n:href=":User:User:" class="btn btn-outline-info">
+		{icon reply}
+		Zpět na přehled
+	</a>
+{/define}
+
+{block content}
+	{control userForm}
