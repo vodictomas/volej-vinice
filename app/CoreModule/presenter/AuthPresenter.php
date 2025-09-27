@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Core\Presenter;
 
 class AuthPresenter extends BasePresenter
@@ -7,7 +9,7 @@ class AuthPresenter extends BasePresenter
 	public function startup(): void
 	{
 		parent::startup();
-		
+
 		if(!$this->getUser()->isLoggedIn())
 		{
 			$this->redirect(':User:Login:');

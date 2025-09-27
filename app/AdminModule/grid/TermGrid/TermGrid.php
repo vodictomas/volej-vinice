@@ -1,21 +1,16 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Admin\Grid;
 
 class TermGrid extends \Core\Grid\BaseGrid
 {
-	/**
-	 * @var \Nette\Database\Explorer
-	 */
-	protected $Database;
-
-
 	public function __construct
 	(
-		\Nette\Database\Explorer $Database
+		protected \Nette\Database\Explorer $Database
 	)
 	{
-		$this->Database = $Database;
 	}
 
 
@@ -41,10 +36,7 @@ class TermGrid extends \Core\Grid\BaseGrid
 			->setFilterText();
 
 		$grid->addColumnText('attendance', 'Účast')
-			->setRenderer(function()
-			{
-				return '0';
-			})
+			->setRenderer(fn() => '0')
 			->setAlign('center');
 
 		return $grid;

@@ -1,20 +1,20 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Admin\Form;
 
-use Nette\Utils\DateTime;
 use Nette\Application\UI\Form;
+use Nette\Utils\DateTime;
 
 class TermForm extends \Core\Form\BaseForm
 {
-
-
 	public function __construct
 	(
-			private \Nette\Database\Explorer $Db
+		private \Nette\Database\Explorer $Db
 	)
 	{
-		
+
 	}
 
 

@@ -1,20 +1,20 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace User\Form;
 
 use ModulIS\Form\Form;
 
 class UserForm extends \ModulIS\Form\FormComponent
 {
-
-
 	public function __construct
 	(
-			private ?int $id,
-			private \Nette\Database\Explorer $Explorer
+		private ?int $id,
+		private \Nette\Database\Explorer $Explorer
 	)
 	{
-		
+
 	}
 
 	public function prepare(): void

@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Admin\Dial;
 
 class AttendanceTypeDial
 {
-	const YES = 'y';
-	const NO = 'n';
-	const WAITING = 'w';
+	public const YES = 'y';
+	public const NO = 'n';
+	public const WAITING = 'w';
 
 	public static function translateIcon(string $icon): ?string
 	{

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Core\Component;
 
 class BaseComponent extends \Nette\Application\UI\Control

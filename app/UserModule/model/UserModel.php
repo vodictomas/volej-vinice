@@ -1,24 +1,16 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace User\Model;
 
 class UserModel
 {
+	private \Core\Manager\MailManager $MailManager;
 
-	/**
-	 * @var \Core\Manager\MailManager
-	 */
-	private $MailManager;
+	private \Nette\Security\Passwords $Passwords;
 
-	/**
-	 * @var \Nette\Security\Passwords
-	 */
-	private $Passwords;
-
-	/**
-	 * @var \User\Repository\UserRepository
-	 */
-	private $UserRepository;
+	private \User\Repository\UserRepository $UserRepository;
 
 	public function __construct
 	(

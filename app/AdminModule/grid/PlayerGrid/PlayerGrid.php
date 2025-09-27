@@ -1,21 +1,16 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Admin\Grid;
 
 class PlayerGrid extends \Core\Grid\BaseGrid
 {
-	/**
-	 * @var \Nette\Database\Explorer
-	 */
-	protected $Database;
-
-
 	public function __construct
 	(
-		\Nette\Database\Explorer $Database
+		protected \Nette\Database\Explorer $Database
 	)
 	{
-		$this->Database = $Database;
 	}
 
 
@@ -41,20 +36,14 @@ class PlayerGrid extends \Core\Grid\BaseGrid
 
 		$grid->addColumnText('active', 'Zobrazit')
 			->addCellAttributes(['width' => '25%'])
-			->setRenderer(function($item)
-			{
-				return $item->active ? 'Ano' : 'Ne';
-			})
+			->setRenderer(fn($item) => $item->active ? 'Ano' : 'Ne')
 			->setAlign('center')
 			->setSortable()
 			->setFilterSelect($filterArray);
 
 		$grid->addColumnText('prefill', 'Předvyplnit docházku')
 			->addCellAttributes(['width' => '25%'])
-			->setRenderer(function($item)
-			{
-				return $item->prefill ? 'Ano' : 'Ne';
-			})
+			->setRenderer(fn($item) => $item->prefill ? 'Ano' : 'Ne')
 			->setAlign('center')
 			->setSortable()
 			->setFilterSelect($filterArray);

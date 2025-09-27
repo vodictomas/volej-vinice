@@ -1,20 +1,20 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Admin\Form;
 
-use \ModulIS\Form\Form;
+use ModulIS\Form\Form;
 
 class PlayerForm extends \ModulIS\Form\FormComponent
 {
-
-
 	public function __construct
 	(
 		private ?int $id,
 		private \Nette\Database\Explorer $Database
 	)
 	{
-		
+
 	}
 
 

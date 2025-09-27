@@ -27,7 +27,8 @@
 	},
 	"require-dev": {
         "modul-is/coding-standard": "^5",
-        "phpstan/phpstan-nette": "2"
+        "phpstan/phpstan-nette": "2",
+        "friendsofphp/php-cs-fixer": "v3.86"
 	},
 	"autoload": {
 		"classmap": ["app/Bootstrap.php"]

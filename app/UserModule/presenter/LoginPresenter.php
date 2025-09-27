@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace UserModule;
 
 use Core\Presenter\BasePresenter;
@@ -11,18 +13,16 @@ use User\Form\ResetPasswordForm;
 
 class LoginPresenter extends BasePresenter
 {
-    #[Inject]
+	#[Inject]
 	public ILoginFormFactory $ILoginFormFactory;
 
-    #[Inject]
+	#[Inject]
 	public Passwords $Passwords;
 
 
 	public function startup(): void
 	{
-		
 		parent::startup();
-		bdump($this->Passwords->hash('root'));
 		if($this->getUser()->isLoggedIn())
 		{
 			$this->redirect(':Admin:Admin:');

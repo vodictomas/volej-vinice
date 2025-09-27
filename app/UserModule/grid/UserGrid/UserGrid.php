@@ -1,20 +1,16 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace User\Grid;
 
 class UserGrid extends \Core\Grid\BaseGrid
 {
-	/**
-	 * @var \User\Repository\UserRepository
-	 */
-	protected $UserRepository;
-
 	public function __construct
 	(
-		\User\Repository\UserRepository $UserRepository
+		protected \User\Repository\UserRepository $UserRepository
 	)
 	{
-		$this->UserRepository = $UserRepository;
 	}
 
 	public function createComponentGrid(): \Ublaboo\DataGrid\DataGrid
@@ -39,10 +35,7 @@ class UserGrid extends \Core\Grid\BaseGrid
 			->setFilterText();
 
 		$grid->addColumnText('role', 'Pravomoc')
-			->setRenderer(function($item)
-			{
-				return implode(", ", \Nette\Utils\Json::decode($item->role));
-			})
+			->setRenderer(fn($item) => implode(', ', \Nette\Utils\Json::decode($item->role)))
 			->setAlign('center')
 			->setSortable()
 			->setFilterText();

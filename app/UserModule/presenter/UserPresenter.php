@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace UserModule;
 
 class UserPresenter extends \Core\Presenter\AuthPresenter
@@ -7,13 +9,13 @@ class UserPresenter extends \Core\Presenter\AuthPresenter
 	/**
 	 * @inject
 	 * @var \User\Form\IUserFormFactory
-	 
+
 	public $IUserFormFactory;*/
 
 	/**
 	 * @inject
 	 * @var \User\Grid\IUserGridFactory
-	 
+
 	 public $IUserGridFactory;*/
 
 	public function actionUserForm(?int $id = null)
