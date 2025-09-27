@@ -46,5 +46,21 @@ forms:
 		MIME_TYPE : Nahraný soubor není v podporovaném formátu
 
 latte:
-	macros:
-		- Kravcik\Macros\FontAwesomeMacro
+	extensions:
+		- Kravcik\LatteFontAwesomeIcon\Extension(defaultStyle: fa-light, defaultFixedWidth: true, defaultElement: span)
+		- ModulIS\Extension\FormExtension
+
+extensions:
+	webpack: Contributte\Webpack\DI\WebpackExtension(%debugMode%, %consoleMode%)
+
+
+webpack:
+	build:
+		directory: %wwwDir%/dist
+		publicPath: /dist/
+	devServer:
+		url: http://localhost:3500
+		enabled: %debugMode%
+		publicUrl: http://localhost:3500
+	manifest:
+		name: manifest.json

@@ -7,16 +7,14 @@ use Nette\Application\UI\Form;
 
 class TermForm extends \Core\Form\BaseForm
 {
-	/**
-	 * @var \Nette\Database\Explorer
-	 */
-	protected $Db;
 
 
-	public function __construct(\Nette\Database\Explorer $Db)
+	public function __construct
+	(
+			private \Nette\Database\Explorer $Db
+	)
 	{
-
-		$this->Db = $Db;
+		
 	}
 
 

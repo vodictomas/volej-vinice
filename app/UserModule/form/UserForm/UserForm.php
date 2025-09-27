@@ -2,59 +2,31 @@
 
 namespace User\Form;
 
-use Nette\Application\UI\Form;
+use ModulIS\Form\Form;
 
-class UserForm extends \Core\Form\BaseForm
+class UserForm extends \ModulIS\Form\FormComponent
 {
-	/**
-	 * @var \Core\Manager\MailManager
-	 */
-	private $MailManager;
-	
-	/**
-	 * @var \Nette\Security\Passwords
-	 */
-	private $Passwords;
 
-	/**
-	 * @var \User\Repository\UserRepository
-	 */
-	private $UserRepository;
-
-	/**
-	 * @var string
-	 */
-	private $appDir;
-
-	/**
-	 * @var int|null
-	 */
-	private $id;
 
 	public function __construct
 	(
-		$appDir,
-		\User\Repository\UserRepository $UserRepository,
-		\Nette\Security\Passwords $Passwords,
-		\Core\Manager\MailManager $MailManager
+			private ?int $id,
+			private \Nette\Database\Explorer $Explorer
 	)
 	{
-		$this->UserRepository = $UserRepository;
-		$this->Passwords = $Passwords;
-		$this->appDir = $appDir;
-		$this->MailManager = $MailManager;
+		
 	}
 
 	public function prepare(): void
 	{
 		if($this->id)
 		{
-			$userEntity = $this->UserRepository->getByID($this->id);
+			$userRow = $this->Database->table('user')
+					->where('id', $this->id)
+					->fetch();
 
-			if($userEntity)
-			{
-				$this['form']->setDefaults($userEntity->toArray());
-			}
+			$this->getComponent('form')
+					->setDefaults($userRow);
 		}
 		else
 		{
@@ -67,52 +39,19 @@ class UserForm extends \Core\Form\BaseForm
 		$form = $this->getForm();
 
 		$form->addText('login', 'Login')
-			->setHtmlAttribute('class', 'form-control')
-			->setRequired()
-			->addRule(function($input)
-			{
-				$criteria = ['login' => $input->getValue()];
-
-				if($this->id)
-				{
-					$criteria['id != ?'] = $this->id;
-				}
-
-				return !boolval($this->UserRepository->getBy($criteria));
-			}, 'Tento login již existuje');
+				->setRequired();
 
 		if(!$this->id)
 		{
 			$form->addText('password', 'Heslo')
-				->setHtmlAttribute('class', 'form-control')
-				->setRequired();
+					->setRequired();
 		}
 
 		$form->addText('firstname', 'Jméno')
-			->setHtmlAttribute('class', 'form-control')
-			->setRequired();
+				->setRequired();
 
 		$form->addText('lastname', 'Příjmení')
-			->setHtmlAttribute('class', 'form-control')
-			->setRequired();
-
-		$form->addEmail('email', 'Email')
-			->setHtmlAttribute('class', 'form-control')
-			->setRequired()
-			->addRule(function($input)
-			{
-				$criteria = ['email' => $input->getValue()];
-
-				if($this->id)
-				{
-					$criteria['id != ?'] = $this->id;
-				}
-
-				return !boolval($this->UserRepository->getBy($criteria));
-			}, 'Uživatel s tímto emailem je již zaregistrovnaý');
-
-		$form->addCheckboxList('role', 'Role', ['admin' => 'Admin', 'customer' => 'Zákazník'])
-			->setRequired();
+				->setRequired();
 
 		$form->addSubmit('save', 'Uložit');
 
@@ -125,31 +64,14 @@ class UserForm extends \Core\Form\BaseForm
 	{
 		if($this->id)
 		{
-			$userEntity = $this->UserRepository->getByID($this->id);
+			$this->Database->table('user')
+					->where('id', $this->id)
+					->update($values);
 		}
 		else
 		{
-			$userEntity = new \User\Entity\UserEntity;
-
-			$userEntity->password = $this->Passwords->hash($values->password);
-		}
-
-		$userEntity->login = $values->login;
-		$userEntity->email = $values->email;
-		$userEntity->firstname = $values->firstname;
-		$userEntity->lastname = $values->lastname;
-		$userEntity->role = $values->role;
-		
-		$this->UserRepository->save($userEntity);
-
-		if(!$this->id)
-		{
-			$mail = (new \User\Mail\UserMail)
-				->setRecipient($values->email)
-				->setParams(['login' => $userEntity->login, 'password' => $values->password, 'create' => true])
-				->setObjectId($userEntity->id);
-
-			$this->MailManager->saveAndSendEmail($mail);
+			$this->Database->table('user')
+					->insert($values);
 		}
 
 		$this->getPresenter()->flashMessage('Úspěšně uloženo', 'success');
@@ -159,12 +81,5 @@ class UserForm extends \Core\Form\BaseForm
 	private function generatePassword(): string
 	{
 		return substr(bin2hex(openssl_random_pseudo_bytes(10)), 0, 10);
-	}
-
-	public function setId(?string $id): self
-	{
-		$this->id = $id ? intval($id) : null;
-
-		return $this;
 	}
 }

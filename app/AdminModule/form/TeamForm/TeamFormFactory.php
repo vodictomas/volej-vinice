@@ -4,5 +4,5 @@ namespace Admin\Form;
 
 interface TeamFormFactory
 {
-	function create(): TeamForm;
+	function create(?int $id): TeamForm;
 }

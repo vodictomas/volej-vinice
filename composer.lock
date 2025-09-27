@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "147139c58dfaab8d3b32e444d98041f5",
+    "content-hash": "62771f1a1e19c2d07dcb666da5ffe720",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -787,6 +787,38 @@
                 }
             ],
             "time": "2024-01-05T12:59:56+00:00"
+        },
+        {
+            "name": "dg/adminer-custom",
+            "version": "v1.32.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dg/adminer.git",
+                "reference": "47f5153a29bc4b0b49849007b5db8d89daf24fb0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dg/adminer/zipball/47f5153a29bc4b0b49849007b5db8d89daf24fb0",
+                "reference": "47f5153a29bc4b0b49849007b5db8d89daf24fb0",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "Customization for Adminer, the best database management tool written in PHP.",
+            "keywords": [
+                "database",
+                "elasticsearch",
+                "mongodb",
+                "mssql",
+                "mysql",
+                "oracle",
+                "postgresql",
+                "sqlite"
+            ],
+            "support": {
+                "source": "https://github.com/dg/adminer/tree/v1.32.0"
+            },
+            "time": "2024-02-14T13:26:42+00:00"
         },
         {
             "name": "justinrainbow/json-schema",

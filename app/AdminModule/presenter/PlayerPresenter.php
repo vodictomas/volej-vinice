@@ -49,8 +49,7 @@ class PlayerPresenter extends \Core\Presenter\AuthPresenter
 	  
 	protected function createComponentPlayerForm(): \Admin\Form\PlayerForm
 	{
-		return $this->PlayerFormFactory->create()
-			->setId($this->id);
+		return $this->PlayerFormFactory->create($this->id);
 	}
 
 

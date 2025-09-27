@@ -4,5 +4,5 @@ namespace User\Form;
 
 interface IUserFormFactory 
 {
-	function create(): UserForm;
+	function create(?int $id): UserForm;
 }
