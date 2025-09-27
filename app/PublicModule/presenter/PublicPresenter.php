@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace PublicModule;
 
 use Admin\Dial\AttendanceReasonDial;
@@ -10,7 +12,7 @@ use Nette\Utils\DateTime;
 
 class PublicPresenter extends BasePresenter
 {
-    #[Inject]
+	#[Inject]
 	public Explorer $Database;
 
 
@@ -32,7 +34,7 @@ class PublicPresenter extends BasePresenter
 		foreach($termSelection as $row)
 		{
 			$termArray[$row->date->format('Ymd')] = $row->available;
-			
+
 			$termAttendanceCountArray[$row->date->format('Ymd')] = 0;
 			$termReasonCountArray[$row->date->format('Ymd')] = 0;
 		}
@@ -43,7 +45,7 @@ class PublicPresenter extends BasePresenter
 			->where('term.date <= ?', $dateTo->format('Y-m-d'));
 
 		$attendanceArray = [];
-		
+
 		foreach($selection as $row)
 		{
 			$attendanceArray[$row->date->format('Ymd')][$row->player_id] = $row;

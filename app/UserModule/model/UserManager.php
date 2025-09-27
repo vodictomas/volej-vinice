@@ -1,33 +1,23 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace User\Model;
 
 class UserManager implements \Nette\Security\IAuthenticator
 {
-	/**
-	 * @var \Nette\Database\Explorer
-	 */
-	protected $Database;
-
-	/**
-	 * @var \Nette\Security\Passwords
-	 */
-	protected $Passwords;
-
 	public function __construct
 	(
-		\Nette\Database\Explorer $Database,
-		\Nette\Security\Passwords $Passwords
+		protected \Nette\Database\Explorer $Database,
+		protected \Nette\Security\Passwords $Passwords
 	)
 	{
-		$this->Database = $Database;
-		$this->Passwords = $Passwords;
 	}
-	
-	public function authenticate(array $credentials): \Nette\Security\IIdentity 
+
+	public function authenticate(array $credentials): \Nette\Security\IIdentity
 	{
 		[$login, $password] = $credentials;
-		
+
 		$userRow = $this->Database->table('user')
 			->where('login', $login)
 			->fetch();

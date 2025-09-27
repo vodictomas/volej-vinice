@@ -1,26 +1,28 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Admin\Dial;
 
 class AttendanceReasonDial
 {
-	const BEER = 'be';
-	const WINE = 'wi';
-	const KOFOLA = 'ko';
-	const HOUBA = 'ho';
-	const CHIPS = 'ch';
-	const INJURY_BEER = 'ib';
-	const CELEBRATION = 'ce';
-	const NONSTOP = 'no';
-	const HOUBA_NONSTOP = 'hn';
-	const SLEEP = 'sl';
-	const LEARN = 'le';
-	const SKI = 'ski';
-	const COLD = 'co';
-	const INJURY = 'in';
-	const BABY = 'ba';
-	const WORK = 'wo';
-	const WAITING = 'w';
+	public const BEER = 'be';
+	public const WINE = 'wi';
+	public const KOFOLA = 'ko';
+	public const HOUBA = 'ho';
+	public const CHIPS = 'ch';
+	public const INJURY_BEER = 'ib';
+	public const CELEBRATION = 'ce';
+	public const NONSTOP = 'no';
+	public const HOUBA_NONSTOP = 'hn';
+	public const SLEEP = 'sl';
+	public const LEARN = 'le';
+	public const SKI = 'ski';
+	public const COLD = 'co';
+	public const INJURY = 'in';
+	public const BABY = 'ba';
+	public const WORK = 'wo';
+	public const WAITING = 'w';
 
 
 	public static function getPubArray(): array
@@ -52,7 +54,7 @@ class AttendanceReasonDial
 		];
 	}
 
-	
+
 	public static function translateIcon(string $icon): ?string
 	{
 		$translationArray = [

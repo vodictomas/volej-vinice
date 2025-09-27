@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace AdminModule;
 
 use Admin\Form\TeamForm;
@@ -11,10 +13,10 @@ use Nette\DI\Attributes\Inject;
 
 class TeamPresenter extends AuthPresenter
 {
-    #[Inject]
+	#[Inject]
 	public TeamFormFactory $TeamFormFactory;
 
-    #[Inject]
+	#[Inject]
 	public TeamGridFactory $TeamGridFactory;
 
 	private ?int $id = null;
@@ -44,7 +46,7 @@ class TeamPresenter extends AuthPresenter
 		$this->setView('form');
 	}
 
-	  
+
 	protected function createComponentTeamForm(): TeamForm
 	{
 		return $this->TeamFormFactory->create($this->id);

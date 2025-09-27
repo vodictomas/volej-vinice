@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace AdminModule;
 
 use Admin\Form\TermForm;
@@ -11,10 +13,10 @@ use Nette\DI\Attributes\Inject;
 
 class TermPresenter extends AuthPresenter
 {
-    #[Inject]
+	#[Inject]
 	public TermGridFactory $TermGridFactory;
 
-    #[Inject]
+	#[Inject]
 	public TermFormFactory $TermFormFactory;
 
 

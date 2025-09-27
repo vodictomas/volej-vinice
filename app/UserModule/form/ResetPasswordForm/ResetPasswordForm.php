@@ -1,35 +1,18 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace User\Form;
 
 class ResetPasswordForm extends \Core\Form\BaseForm
 {
-
-	/**
-	 * @var \Nette\Application\LinkGenerator
-	 */
-	private $LinkGenerator;
-
-	/**
-	 * @var \Core\Manager\MailManager
-	 */
-	private $MailManager;
-
-	/**
-	 * @var \User\Repository\UserRepository
-	 */
-	private $UserRepository;
-
 	public function __construct
 	(
-		\User\Repository\UserRepository $UserRepository,
-		\Core\Manager\MailManager $MailManager,
-		\Nette\Application\LinkGenerator $LinkGenerator
+		private \User\Repository\UserRepository $UserRepository,
+		private \Core\Manager\MailManager $MailManager,
+		private \Nette\Application\LinkGenerator $LinkGenerator
 	)
 	{
-		$this->UserRepository = $UserRepository;
-		$this->MailManager = $MailManager;
-		$this->LinkGenerator = $LinkGenerator;
 	}
 
 	public function createComponentForm(): \Nette\Application\UI\Form
@@ -38,10 +21,7 @@ class ResetPasswordForm extends \Core\Form\BaseForm
 
 		$form->addEmail('email', 'Zadejte Váš zaregistrovaný email')
 			->setHtmlAttribute('class', 'form-control')
-			->addRule(function($input)
-			{
-				return boolval($this->UserRepository->getBy(['email' => $input->getValue()]));
-			}, 'Nenalezen žádný uživatel s tímto emailem')
+			->addRule(fn($input) => boolval($this->UserRepository->getBy(['email' => $input->getValue()])), 'Nenalezen žádný uživatel s tímto emailem')
 			->setRequired();
 
 		$form->addSubmit('reset', 'Resetovat heslo');

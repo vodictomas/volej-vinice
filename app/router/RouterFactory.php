@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Router;
 
@@ -9,18 +9,18 @@ use Nette\Application\Routers\RouteList;
 
 final class RouterFactory
 {
-    use Nette\StaticClass;
+	use Nette\StaticClass;
 
-    public static function createRouter(): RouteList
-    {
-        $router = new RouteList;
+	public static function createRouter(): RouteList
+	{
+		$router = new RouteList;
 
-        $router->addRoute('<module>/<presenter>/<action>[/<id>]', [
+		$router->addRoute('<module>/<presenter>/<action>[/<id>]', [
 			'module' => 'Admin',
 			'presenter' => 'Admin',
 			'action' => 'default'
 		]);
 
-        return $router;
-    }
+		return $router;
+	}
 }

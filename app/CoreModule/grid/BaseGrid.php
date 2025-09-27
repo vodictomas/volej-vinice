@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Core\Grid;
 
 class BaseGrid extends \Nette\Application\UI\Control
@@ -32,7 +34,7 @@ class BaseGrid extends \Nette\Application\UI\Control
 			'ublaboo_datagrid.add' => 'Přidat položku',
 			'ublaboo_datagrid.multiselect_choose' => 'Vyberte',
 			'ublaboo_datagrid.multiselect_selected' => 'Vybrané položky'
-        ]);
+		]);
 
 		$grid->setTranslator($trans);
 

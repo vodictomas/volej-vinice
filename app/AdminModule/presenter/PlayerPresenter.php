@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace AdminModule;
 
 use Admin\Form\PlayerForm;
@@ -11,10 +13,10 @@ use Nette\DI\Attributes\Inject;
 
 class PlayerPresenter extends AuthPresenter
 {
-    #[Inject]
+	#[Inject]
 	public PlayerFormFactory $PlayerFormFactory;
 
-    #[Inject]
+	#[Inject]
 	public PlayerGridFactory $PlayerGridFactory;
 
 	private ?int $id = null;
@@ -44,7 +46,7 @@ class PlayerPresenter extends AuthPresenter
 		$this->setView('form');
 	}
 
-	  
+
 	protected function createComponentPlayerForm(): PlayerForm
 	{
 		return $this->PlayerFormFactory->create($this->id);
