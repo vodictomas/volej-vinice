@@ -2,19 +2,20 @@
 
 namespace UserModule;
 
-class LoginPresenter extends \Core\Presenter\BasePresenter
-{
-	/**
-	 * @inject
-	 * @var \User\Form\ILoginFormFactory
-	 */
-	public $ILoginFormFactory;
+use Core\Presenter\BasePresenter;
+use Nette\DI\Attributes\Inject;
+use Nette\Security\Passwords;
+use User\Form\ILoginFormFactory;
+use User\Form\LoginForm;
+use User\Form\ResetPasswordForm;
 
-	/**
-	 * @inject
-	 * @var \Nette\Security\Passwords
-	 */
-	public $Passwords;
+class LoginPresenter extends BasePresenter
+{
+    #[Inject]
+	public ILoginFormFactory $ILoginFormFactory;
+
+    #[Inject]
+	public Passwords $Passwords;
 
 
 	public function startup(): void
@@ -44,12 +45,12 @@ class LoginPresenter extends \Core\Presenter\BasePresenter
 		$this->redirect(':User:Login:');
 	}
 
-	public function createComponentLoginForm(): \User\Form\LoginForm
+	public function createComponentLoginForm(): LoginForm
 	{
 		return $this->ILoginFormFactory->create();
 	}
 
-	public function createComponentResetPasswordForm(): \User\Form\ResetPasswordForm
+	public function createComponentResetPasswordForm(): ResetPasswordForm
 	{
 		return $this->IResetPasswordFormFactory->create();
 	}

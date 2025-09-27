@@ -2,15 +2,16 @@
 
 namespace PublicModule;
 
+use Admin\Dial\AttendanceReasonDial;
+use Core\Presenter\BasePresenter;
+use Nette\Database\Explorer;
+use Nette\DI\Attributes\Inject;
 use Nette\Utils\DateTime;
 
-class PublicPresenter extends \Core\Presenter\BasePresenter
+class PublicPresenter extends BasePresenter
 {
-	/**
-	 * @inject
-	 * @var \Nette\Database\Explorer
-	 */
-	public $Database;
+    #[Inject]
+	public Explorer $Database;
 
 
 	public function actionDefault(): void
@@ -52,7 +53,7 @@ class PublicPresenter extends \Core\Presenter\BasePresenter
 				$termAttendanceCountArray[$row->date->format('Ymd')]++;
 			}
 
-			if($row->reason !== \Admin\Dial\AttendanceReasonDial::WAITING)
+			if($row->reason !== AttendanceReasonDial::WAITING)
 			{
 				$termReasonCountArray[$row->date->format('Ymd')]++;
 			}

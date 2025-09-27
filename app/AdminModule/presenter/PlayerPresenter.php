@@ -2,27 +2,25 @@
 
 namespace AdminModule;
 
-class PlayerPresenter extends \Core\Presenter\AuthPresenter
+use Admin\Form\PlayerForm;
+use Admin\Form\PlayerFormFactory;
+use Admin\Grid\PlayerGrid;
+use Admin\Grid\PlayerGridFactory;
+use Core\Presenter\AuthPresenter;
+use Nette\DI\Attributes\Inject;
+
+class PlayerPresenter extends AuthPresenter
 {
-	/**
-	 * @inject
-	 * @var \Admin\Form\PlayerFormFactory
-	 */
-	public $PlayerFormFactory;
+    #[Inject]
+	public PlayerFormFactory $PlayerFormFactory;
 
-	/**
-	 * @inject
-	 * @var \Admin\Grid\PlayerGridFactory
-	 */
-	public $PlayerGridFactory;
+    #[Inject]
+	public PlayerGridFactory $PlayerGridFactory;
 
-	/**
-	 * @var int|null
-	 */
-	private $id;
+	private ?int $id = null;
 
 
-	public function actionEdit(string $id = null)
+	public function actionEdit(?int $id = null)
 	{
 		if(!$id)
 		{
@@ -47,13 +45,13 @@ class PlayerPresenter extends \Core\Presenter\AuthPresenter
 	}
 
 	  
-	protected function createComponentPlayerForm(): \Admin\Form\PlayerForm
+	protected function createComponentPlayerForm(): PlayerForm
 	{
 		return $this->PlayerFormFactory->create($this->id);
 	}
 
 
-	protected function createComponentPlayerGrid(): \Admin\Grid\PlayerGrid
+	protected function createComponentPlayerGrid(): PlayerGrid
 	{
 		return $this->PlayerGridFactory->create();
 	}

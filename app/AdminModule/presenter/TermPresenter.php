@@ -2,28 +2,29 @@
 
 namespace AdminModule;
 
-class TermPresenter extends \Core\Presenter\AuthPresenter
+use Admin\Form\TermForm;
+use Admin\Form\TermFormFactory;
+use Admin\Grid\TermGrid;
+use Admin\Grid\TermGridFactory;
+use Core\Presenter\AuthPresenter;
+use Nette\DI\Attributes\Inject;
+
+class TermPresenter extends AuthPresenter
 {
-	/**
-	 * @inject
-	 * @var \Admin\Grid\TermGridFactory
-	 */
-	public $TermGridFactory;
+    #[Inject]
+	public TermGridFactory $TermGridFactory;
 
-	/**
-	 * @inject
-	 * @var \Admin\Form\TermFormFactory
-	 */
-	public $TermFormFactory;
+    #[Inject]
+	public TermFormFactory $TermFormFactory;
 
 
-	protected function createComponentTermGrid(): \Admin\Grid\TermGrid
+	protected function createComponentTermGrid(): TermGrid
 	{
 		return $this->TermGridFactory->create();
 	}
 
 
-	protected function createComponentTermForm(): \Admin\Form\TermForm
+	protected function createComponentTermForm(): TermForm
 	{
 		return $this->TermFormFactory->create();
 	}
