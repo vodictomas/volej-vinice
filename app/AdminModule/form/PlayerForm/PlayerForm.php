@@ -2,27 +2,19 @@
 
 namespace Admin\Form;
 
-use \Nette\Application\UI\Form;
+use \ModulIS\Form\Form;
 
-class PlayerForm extends \Core\Form\BaseForm
+class PlayerForm extends \ModulIS\Form\FormComponent
 {
-	/**
-	 * @var \Nette\Database\Explorer
-	 */
-	protected $Database;
-
-	/**
-	 * @var int|null
-	 */
-	private $id;
 
 
 	public function __construct
 	(
-		\Nette\Database\Explorer $Database
+		private ?int $id,
+		private \Nette\Database\Explorer $Database
 	)
 	{
-		$this->Database = $Database;
+		
 	}
 
 
@@ -45,22 +37,18 @@ class PlayerForm extends \Core\Form\BaseForm
 		$form = $this->getForm();
 
 		$form->addText('nick', 'Jméno')
-			->setHtmlAttribute('class', 'form-control')
-			->setRequired();
+				->setRequired();
 
 		$teamArray = $this->Database->table('team')
 			->where('active', 1)
 			->fetchPairs('id', 'name');
 
 		$form->addSelect('team_id', 'Tým', $teamArray)
-			->setPrompt('~ Vyberte ~')
-			->setHtmlAttribute('class', 'form-control');
+			->setPrompt('~ Vyberte ~');
 
-		$form->addCheckbox('active', 'Zobrazovat')
-			->setHtmlAttribute('class', 'form-control');
+		$form->addCheckbox('active', 'Zobrazovat');
 
-		$form->addCheckbox('prefill', 'Předvyplnit docházku')
-			->setHtmlAttribute('class', 'form-control');
+		$form->addCheckbox('prefill', 'Předvyplnit docházku');
 
 		$form->addSubmit('save', 'Uložit');
 

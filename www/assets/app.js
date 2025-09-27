@@ -19,9 +19,6 @@ import '@fortawesome/fontawesome-free/css/regular.css';
 import '@fortawesome/fontawesome-free/css/solid.css';
 import '@fortawesome/fontawesome-free/css/fontawesome.css';
 
-import 'admin-lte/dist/js/adminlte.min.js';
-import 'admin-lte/dist/css/adminlte.min.css';
-
 import 'ublaboo-datagrid/assets/datagrid.js';
 import 'ublaboo-datagrid/assets/datagrid.css';
 

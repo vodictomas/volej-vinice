@@ -6,7 +6,7 @@
 	"license": ["MIT", "BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
 	"require": {
 		"php": ">= 8.2",
-		"nette/application": "^3.0",
+		"nette/application": "^4.0",
 		"nette/bootstrap": "^3.0",
 		"nette/caching": "^3.0",
 		"nette/database": "^3.0",
@@ -22,12 +22,12 @@
 		"ublaboo/datagrid": "^6.9",
 		"modul-is/form": "^1",
 		"composer/composer": "^2.0",
-        "contributte/webpack": "^2.1"
+        "contributte/webpack": "^2.1",
+		"dg/adminer-custom": "^1"
 	},
 	"require-dev": {
-        "modul-is/coding-standard": "^4",
-        "phpstan/phpstan": "^1",
-        "phpstan/phpstan-nette": "1"
+        "modul-is/coding-standard": "^5",
+        "phpstan/phpstan-nette": "2"
 	},
 	"autoload": {
 		"classmap": ["app/Bootstrap.php"]

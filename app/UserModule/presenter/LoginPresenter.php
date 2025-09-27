@@ -10,11 +10,18 @@ class LoginPresenter extends \Core\Presenter\BasePresenter
 	 */
 	public $ILoginFormFactory;
 
+	/**
+	 * @inject
+	 * @var \Nette\Security\Passwords
+	 */
+	public $Passwords;
+
 
 	public function startup(): void
 	{
+		
 		parent::startup();
-
+		bdump($this->Passwords->hash('root'));
 		if($this->getUser()->isLoggedIn())
 		{
 			$this->redirect(':Admin:Admin:');

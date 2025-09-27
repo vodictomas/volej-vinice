@@ -2,27 +2,19 @@
 
 namespace Admin\Form;
 
-use \Nette\Application\UI\Form;
+use ModulIS\Form\Form;
 
-class TeamForm extends \Core\Form\BaseForm
+class TeamForm extends \ModulIS\Form\FormComponent
 {
-	/**
-	 * @var \Nette\Database\Explorer
-	 */
-	protected $Database;
-
-	/**
-	 * @var int|null
-	 */
-	private $id;
 
 
 	public function __construct
 	(
-		\Nette\Database\Explorer $Database
+			private ?int $id,
+			private \Nette\Database\Explorer $Database
 	)
 	{
-		$this->Database = $Database;
+		
 	}
 
 
@@ -75,13 +67,5 @@ class TeamForm extends \Core\Form\BaseForm
 
 		$this->getPresenter()->flashMessage('Uloženo', 'success');
 		$this->getPresenter()->redirect(':Admin:Team:');
-	}
-
-
-	public function setId(?int $id): self
-	{
-		$this->id = $id;
-
-		return $this;
 	}
 }

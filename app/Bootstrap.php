@@ -29,8 +29,6 @@ class Bootstrap
 			->addDirectory(__DIR__)
 			->register();
 
-		\Kravcik\Macros\FontAwesomeMacro::$defaultStyle = 'fas';
-
 		return $configurator;
 	}
 }

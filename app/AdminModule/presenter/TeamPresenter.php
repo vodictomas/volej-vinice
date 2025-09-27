@@ -49,8 +49,7 @@ class TeamPresenter extends \Core\Presenter\AuthPresenter
 	  
 	protected function createComponentTeamForm(): \Admin\Form\TeamForm
 	{
-		return $this->TeamFormFactory->create()
-			->setId($this->id);
+		return $this->TeamFormFactory->create($this->id);
 	}
 
 
