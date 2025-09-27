@@ -16,7 +16,7 @@ class UserPresenter extends \Core\Presenter\AuthPresenter
 	 
 	 public $IUserGridFactory;*/
 
-	public function actionUserForm(string $id = null)
+	public function actionUserForm(?int $id = null)
 	{
 		$this['userForm']->prepare();
 

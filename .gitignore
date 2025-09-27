@@ -4,3 +4,4 @@ www/dist/*
 temp/*
 nbproject/*
 app/config/local.neon
+/.idea
