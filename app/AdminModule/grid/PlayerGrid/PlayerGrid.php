@@ -51,7 +51,7 @@ class PlayerGrid extends \Core\Grid\BaseGrid
 		$grid->addAction('edit', '', ':Admin:Player:edit')
 			->setClass('btn btn-warning btn-sm')
 			->setTitle('Upravit hráče')
-			->setIcon('edit');
+			->setIcon('user');
 
 		return $grid;
 	}

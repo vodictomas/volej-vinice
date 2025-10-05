@@ -28,8 +28,8 @@
 									{foreach $termArray as $term => $available}
 										{if $available}
 											<td style="border-right:1px solid gray;" class="rozpis_ct yes ">
-												<span id="{php echo '_' . $playerId . '-' . $term . '_2';}">
-													<a href="javascript:void(0);" onclick="pp3.select('{$term}', '{$playerId}', '{php echo '_' . $playerId . '-' . $term . '_2'}');" class="yes">
+												<span id="{php '_' . $playerId . '-' . $term . '_2'}">
+													<a href="javascript:void(0);" onclick="pp3.select('{$term}', '{$playerId}', '{php '_' . $playerId . '-' . $term . '_2'}')" class="yes">
 														{ifset $attendanceArray[$term][$playerId]}
 															{var $icon = \Admin\Dial\AttendanceTypeDial::translateIcon($attendanceArray[$term][$playerId]->type)}
 															<img src="{$basePath}/images/{$icon}">

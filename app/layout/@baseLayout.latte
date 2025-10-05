@@ -8,8 +8,7 @@
 		</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<link href="{$basePath}/assets/bootstrap.min.css" rel="stylesheet">
-		<link href="{$basePath}/assets/dashboard.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="{webpack app.css}">
 	</head>
 	{snippet flashMessages}
 		<div id="flashMessagesBox" class="pull-right">
@@ -28,7 +27,7 @@
 		{else}
 			{include content}
 		{/ifset}
-		<script src="{$basePath}/assets/bootstrap.bundle.min.js"></script>
+		<script n:nonce src="{webpack app.js}"></script>
 		{ifset #js}
 			{include #js}
 		{/ifset}

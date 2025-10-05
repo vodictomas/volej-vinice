@@ -10,7 +10,7 @@ class BaseGrid extends \Nette\Application\UI\Control
 	{
 		$grid = new \Ublaboo\DataGrid\DataGrid;
 
-		$grid::$iconPrefix = 'fas fa-';
+		$grid::$iconPrefix = 'fa-solid fa-';
 
 		$trans = new \Ublaboo\DataGrid\Localization\SimpleTranslator([
 			'ublaboo_datagrid.group actions' => 'Hromadné akce',

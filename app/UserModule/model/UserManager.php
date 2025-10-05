@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace User\Model;
 
-class UserManager implements \Nette\Security\IAuthenticator
+class UserManager implements \Nette\Security\Authenticator
 {
 	public function __construct
 	(
@@ -14,12 +14,10 @@ class UserManager implements \Nette\Security\IAuthenticator
 	{
 	}
 
-	public function authenticate(array $credentials): \Nette\Security\IIdentity
+	public function authenticate(string $username, string $password): \Nette\Security\IIdentity
 	{
-		[$login, $password] = $credentials;
-
 		$userRow = $this->Database->table('user')
-			->where('login', $login)
+			->where('login', $username)
 			->fetch();
 
 		if(!$userRow)
