@@ -4,24 +4,17 @@ declare(strict_types = 1);
 
 namespace User\Model;
 
+use Nette\Security\Passwords;
+use User\Repository\UserRepository;
+
 class UserModel
 {
-	private \Core\Manager\MailManager $MailManager;
-
-	private \Nette\Security\Passwords $Passwords;
-
-	private \User\Repository\UserRepository $UserRepository;
-
 	public function __construct
 	(
-		//\User\Repository\UserRepository $UserRepository,
-		\Nette\Security\Passwords $Passwords,
-		\Core\Manager\MailManager $MailManager
+		private readonly UserRepository $UserRepository,
+        private readonly Passwords $Passwords
 	)
 	{
-		//$this->UserRepository = $UserRepository;
-		$this->Passwords = $Passwords;
-		$this->MailManager = $MailManager;
 	}
 
 	public function resetPassword(string $hash): void
@@ -47,12 +40,5 @@ class UserModel
 		$userEntity->password = $this->Passwords->hash($password);
 
 		$this->UserRepository->save($userEntity);
-
-		$mail = (new \User\Mail\UserMail)
-			->setRecipient($userEntity->email)
-			->setParams(['login' => $userEntity->login, 'password' => $password, 'create' => false])
-			->setObjectId($userEntity->id);
-
-		$this->MailManager->saveAndSendEmail($mail);
 	}
 }

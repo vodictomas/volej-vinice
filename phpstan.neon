@@ -1,0 +1,13 @@
+includes:
+    - vendor/phpstan/phpstan-nette/extension.neon
+parameters:
+	excludePaths:
+		analyse:
+			- app/Bootstrap.php
+	ignoreErrors:
+		- '#Call to an undefined method [a-zA-Z0-9\\_]+::set(Default)?Value\(\)#'
+	scanDirectories:
+		-  app
+	universalObjectCratesClasses:
+		- Nette\Database\Table\ActiveRow
+		- Nette\ComponentModel\IComponent

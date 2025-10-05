@@ -47,7 +47,7 @@ forms:
 
 latte:
 	extensions:
-		- Kravcik\LatteFontAwesomeIcon\Extension(defaultStyle: fa-light, defaultFixedWidth: true, defaultElement: span)
+		- Kravcik\LatteFontAwesomeIcon\Extension(defaultStyle: fa-solid, defaultFixedWidth: true, defaultElement: span)
 		- ModulIS\Extension\FormExtension
 
 extensions:

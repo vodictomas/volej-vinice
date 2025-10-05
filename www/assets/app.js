@@ -1,12 +1,13 @@
 // Required dependencies
-import 'jquery';
-import 'bootstrap';
-import 'nette-forms/src/assets/netteForms.js';
-import 'nette.ajax.js';
-import 'bootstrap/dist/css/bootstrap.css';
+import jquery from 'jquery';
+import naja from 'naja';
+import netteForms from 'nette-forms';
 
-import 'jquery-ui-dist/jquery-ui.min.js';
-import 'jquery-ui-dist/jquery-ui.min.css';
+import 'bootstrap/dist/css/bootstrap.css';
+import * as bootstrap from 'bootstrap';
+
+import 'jquery-ui/ui/widgets/sortable';
+import 'jquery-ui/ui/disable-selection';
 
 import 'bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css';
 import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js';
@@ -22,8 +23,11 @@ import '@fortawesome/fontawesome-free/css/fontawesome.css';
 import 'ublaboo-datagrid/assets/datagrid.js';
 import 'ublaboo-datagrid/assets/datagrid.css';
 
-import './js/project.js';
 import './js/ColorPicker2.js';
 
-import './css/project.css';
 import './css/login.css';
+import './css/dashboard.css';
+
+
+window.bootstrap = bootstrap;
+window.naja = naja;
