@@ -4,10 +4,11 @@ declare(strict_types = 1);
 
 namespace Admin\Form;
 
-use Nette\Application\UI\Form;
+use ModulIS\Form\Form;
+use ModulIS\Form\FormComponent;
 use Nette\Utils\DateTime;
 
-class TermForm extends \Core\Form\BaseForm
+class TermForm extends FormComponent
 {
 	public function __construct
 	(
@@ -18,18 +19,20 @@ class TermForm extends \Core\Form\BaseForm
 	}
 
 
+	public function prepare(): void
+	{
+
+	}
+
+
 	public function createComponentForm(): Form
 	{
 		$form = $this->getForm();
 
-		$form->addText('date_from', 'Vygenerovat termíny od')
-			->setHtmlAttribute('class', 'form-control datepicker')
-			->setHtmlAttribute('autocomplete', 'off')
+		$form->addDate('date_from', 'Vygenerovat termíny od')
 			->setRequired();
 
-		$form->addText('date_to', 'Vygenerovat termíny do')
-			->setHtmlAttribute('class', 'form-control datepicker')
-			->setHtmlAttribute('autocomplete', 'off')
+		$form->addDate('date_to', 'Vygenerovat termíny do')
 			->setRequired();
 
 		$form->addSubmit('save', 'Generovat');
@@ -79,7 +82,7 @@ class TermForm extends \Core\Form\BaseForm
 		foreach($dateRange as $dateTerm)
 		{
 			$termRow = $this->Db->table('term')
-				->insert([['date' => $dateTerm->format('Y-m-d')]]);
+				->insert(['date' => $dateTerm->format('Y-m-d')]);
 
 			foreach($prefillPairs as $playerId)
 			{

@@ -40,6 +40,9 @@ class TeamForm extends \ModulIS\Form\FormComponent
 			->setHtmlAttribute('class', 'form-control')
 			->setRequired();
 
+		$form->addText('color', 'Barva')
+			->setRequired();
+
 		$form->addCheckbox('active', 'Zobrazovat')
 			->setHtmlAttribute('class', 'form-control');
 
