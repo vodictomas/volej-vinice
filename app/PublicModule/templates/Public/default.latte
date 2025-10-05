@@ -1,30 +1,33 @@
 {layout '../@layout.latte'}
 
 {block content}
-<center>
 <table>
 	<tbody>
 		<tr>
 			<td>
-				<table cellspacing="0" cellpadding="0" class="rozpis">
+				<table class="rozpis">
 					<thead>
 						<tr>
 							<td style="width: 30px;">&nbsp;</td>
 							<td class="rozpis_ct">&nbsp;</td>
 							{foreach $termArray as $term => $available}
-								<td colspan="2" class="{if $available}rozpis_dny{else}rozpis_dny_mimo{/if}">{$term|date:'d.m.'}</td>
+								<td colspan="2" class="{if $available}rozpis_dny{else}rozpis_dny_mimo{/if}">
+									{$term|date:'d.m.'}
+								</td>
 							{/foreach}
 						</tr>
 					</thead>
 					<tbody>
-						{foreach $teamArray as $teamId => $teamName}
-							{continueIf !isset($playerArray[$teamId])}
+						{foreach $teamSelection as $teamRow}
+							{continueIf !isset($playerArray[$teamRow->id])}
 							<tr>
-								<td style="background-color: orange;font-weight:bold;" rowspan="{count($playerArray[$teamId])}">
-									{$teamName}
+								<td style="background-color: {$teamRow->color|noescape};font-weight:bold;width: 30px;" rowspan="{count($playerArray[$teamRow->id])}">
+									{$teamRow->name}
 								</td>
-								{foreach $playerArray[$teamId] as $playerId => $player}
-									<td class="rozpis_clovekA">{$player}</td>
+								{foreach $playerArray[$teamRow->id] as $playerId => $player}
+									<td class="rozpis_clovekA" style="background-color: {$teamRow->color|noescape};">
+										{$player}
+									</td>
 									{foreach $termArray as $term => $available}
 										{if $available}
 											<td style="border-right:1px solid gray;" class="rozpis_ct yes ">
@@ -34,7 +37,7 @@
 															{var $icon = \Admin\Dial\AttendanceTypeDial::translateIcon($attendanceArray[$term][$playerId]->type)}
 															<img src="{$basePath}/images/{$icon}">
 														{else}
-															<img src="{$basePath}/images/question.jpg">
+															<img src="{$basePath}/images/otaznik2.jpg">
 														{/ifset}
 													</a>
 												</span>
@@ -42,12 +45,12 @@
 											<td style="border-left:0px solid gray;" class="rozpis_pivo_ct ">
 												<span id="_5-1641164400">
 													<a href="javascript:void(0);" onclick="pp2.select('1641164400', '5', '_5-1641164400');" class="nevim_pivo">
-														{ifset $attendanceArray[$term][$playerId]}
+														{if isset($attendanceArray[$term][$playerId]) && $attendanceArray[$term][$playerId]->reason}
 															{var $icon = \Admin\Dial\AttendanceReasonDial::translateIcon($attendanceArray[$term][$playerId]->reason)}
 															<img src="{$basePath}/images/{$icon}">
 														{else}
-															<img src="{$basePath}/images/question.jpg">
-														{/ifset}
+															<img src="{$basePath}/images/otaznik3.jpg">
+														{/if}
 													</a>
 												</span>
 											</td>
@@ -91,4 +94,3 @@
 		</tr>
 	</tbody>
 </table>
-</center>

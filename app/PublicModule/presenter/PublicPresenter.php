@@ -5,8 +5,10 @@ declare(strict_types = 1);
 namespace PublicModule;
 
 use Admin\Dial\AttendanceReasonDial;
+use Admin\Dial\AttendanceTypeDial;
 use Core\Presenter\BasePresenter;
 use Nette\Database\Explorer;
+use Nette\Database\Table\Selection;
 use Nette\DI\Attributes\Inject;
 use Nette\Utils\DateTime;
 
@@ -21,8 +23,6 @@ class PublicPresenter extends BasePresenter
 		$dateFrom = new DateTime;
 		$dateTo = $dateFrom->modifyClone('+ 3 weeks');
 
-		$teamArray = $this->getTeamArray();
-
 		$termSelection = $this->Database->table('term')
 			->where('date >= ?', $dateFrom->format('Y-m-d'))
 			->where('date <= ?', $dateTo->format('Y-m-d'));
@@ -33,10 +33,10 @@ class PublicPresenter extends BasePresenter
 
 		foreach($termSelection as $row)
 		{
-			$termArray[$row->date->format('Ymd')] = $row->available;
+			$termArray[$row->date->format('Y-m-d')] = $row->available;
 
-			$termAttendanceCountArray[$row->date->format('Ymd')] = 0;
-			$termReasonCountArray[$row->date->format('Ymd')] = 0;
+			$termAttendanceCountArray[$row->date->format('Y-m-d')] = 0;
+			$termReasonCountArray[$row->date->format('Y-m-d')] = 0;
 		}
 
 		$selection = $this->Database->table('attendance')
@@ -48,21 +48,23 @@ class PublicPresenter extends BasePresenter
 
 		foreach($selection as $row)
 		{
-			$attendanceArray[$row->date->format('Ymd')][$row->player_id] = $row;
+			$attendanceArray[$row->date->format('Y-m-d')][$row->player_id] = $row;
 
-			if($row->type === \Admin\Dial\AttendanceTypeDial::YES)
+			if($row->type === AttendanceTypeDial::YES)
 			{
-				$termAttendanceCountArray[$row->date->format('Ymd')]++;
+				$termAttendanceCountArray[$row->date->format('Y-m-d')]++;
 			}
 
 			if($row->reason !== AttendanceReasonDial::WAITING)
 			{
-				$termReasonCountArray[$row->date->format('Ymd')]++;
+				$termReasonCountArray[$row->date->format('Y-m-d')]++;
 			}
 		}
 
-		$this->template->teamArray = $teamArray;
-		$this->template->playerArray = $this->getPlayerArray($teamArray);
+		$teamSelection = $this->getTeamSelection();
+
+		$this->template->teamSelection = $teamSelection;
+		$this->template->playerArray = $this->getPlayerArray($teamSelection);
 		$this->template->attendanceArray = $attendanceArray;
 		$this->template->termArray = $termArray;
 		$this->template->termAttendanceCountArray = $termAttendanceCountArray;
@@ -70,36 +72,29 @@ class PublicPresenter extends BasePresenter
 	}
 
 
-	private function getPlayerArray(array $teamArray): array
+	private function getPlayerArray(Selection $teamSelection): array
 	{
 		$playerArray = [];
 
-		foreach($teamArray as $teamId => $name)
+		foreach($teamSelection as $teamRow)
 		{
-			$playerArray[$teamId] = $this->Database->table('player')
-				->where('team_id', $teamId)
+			$playerArray[$teamRow->id] = $this->Database->table('player')
+				->where('team_id', $teamRow->id)
 				->where('active', 1)
 				->order('nick')
 				->fetchPairs('id', 'nick');
 		}
 
-		$playerArray[null] = $this->Database->table('player')
-			->where('team_id IS NULL')
-			->where('active', 1)
-			->order('nick')
-			->fetchPairs('id', 'nick');
-
 		return $playerArray;
 	}
 
-	private function getTeamArray(): array
+	private function getTeamSelection(): Selection
 	{
-		$teamArray = $this->Database->table('team')
-			->where('active', 1)
-			->fetchPairs('id', 'name');
-
-		$teamArray[null] = 'Hosti';
-
-		return $teamArray;
+		return $this->Database->table('team')
+			->select('team.name, team.id, team.color, COUNT(:player.id) AS player_count')
+			->where('team.active', 1)
+			->where(':player.active')
+			->group('team.id')
+			->having('player_count > 0');
 	}
 }

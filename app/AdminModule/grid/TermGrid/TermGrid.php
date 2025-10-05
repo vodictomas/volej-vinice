@@ -30,11 +30,6 @@ class TermGrid extends \Core\Grid\BaseGrid
 			->setSortable()
 			->setFilterText();
 
-		$grid->addColumnText('available', 'Dostupný')
-			->setAlign('center')
-			->setSortable()
-			->setFilterText();
-
 		$grid->addColumnText('attendance', 'Účast')
 			->setRenderer(fn() => '0')
 			->setAlign('center');
