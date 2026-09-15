@@ -1,0 +1,179 @@
+<div class="chat">
+	<div class="chat-box">
+		<div class="chat-messages" n:snippet="messages">
+			<ul>
+				<li n:foreach="$messageList as $messageRow">
+					<span style="color: {$messageRow->color|color|noescape};">{$messageRow->nick}</span>
+					<span class="chat-date">({$messageRow->date|date:'H:i d.m.'})</span>:
+					{$messageRow->text|smile}
+				</li>
+			</ul>
+		</div>
+
+		<form n:name="form" class="chat-form" id="chat-form" novalidate>
+			<table>
+				<tr>
+					<td><label n:name="player_id">Jméno&nbsp;:</label></td>
+					<td><select n:name="player_id" id="chat-name"></select></td>
+					<td>
+						<button type="button" id="chat-color-button" class="chat-color-button" title="Barva jména"></button>
+						<input n:name="color" id="chat-color">
+					</td>
+					<td><label n:name="text">Zpráva&nbsp;:</label></td>
+					<td><input n:name="text" id="chat-text" size="62" maxlength="250" autocomplete="off"></td>
+					<td><input n:name="send" class="chat-send"></td>
+				</tr>
+				<tr>
+					<td colspan="4"></td>
+					<td class="chat-smiles">
+						<img n:foreach="$smileList as $smile"
+							src="{$imagePath}/{$smile->value}"
+							width="{$smile->getSize()[0]}"
+							height="{$smile->getSize()[1]}"
+							alt="{$smile->getCode()}"
+							title="{$smile->getCode()}"
+							data-code="{$smile->getCode()}">
+					</td>
+					<td>
+						<div class="chat-timeline"><div id="chat-timeline"></div></div>
+					</td>
+				</tr>
+			</table>
+		</form>
+
+		<div class="chat-palette" id="chat-palette">
+			<span n:foreach="$colorArray as $color" style="background: {$color};" data-color="{$color}" title="{$color}"></span>
+		</div>
+	</div>
+
+	<div class="chat-info">
+		<b>*</b> Chat se AJAXově refrešuje každých 15 vteřin, tak snad to nezpůsobí problémy (; .<br>
+		<b>*</b> Smajlíky jde vložit kliknutím nebo napsat, např. :-) ;-) :-D (; .
+	</div>
+</div>
+
+<style>
+	.chat { margin: 20px 105px 70px 105px; text-align: left; }
+	.chat-box { position: relative; border: 1px solid gray; background: #EEEEDD; }
+	.chat-messages { height: 140px; overflow: auto; background: #EEFFFF; border: 1px solid gray; margin: 6px 3px 5px 3px; padding: 5px; font-family: Verdana, sans-serif; font-size: 11pt; }
+	.chat-messages ul { list-style-type: none; margin: 0; padding: 0; }
+	.chat-date { font-size: 70%; }
+	.chat-form { border: 1px solid gray; margin: 3px; background: #EEEEE5; font-family: sans-serif; font-size: 9pt; }
+	.chat-form table { margin: 0; padding: 0; }
+	.chat-form td { text-align: left; }
+	.chat-form .has-error { outline: 2px solid #DD0000; }
+	.chat-color-button { width: 22px; height: 22px; border: 1px solid gray; background: #33CCFF; cursor: pointer; vertical-align: middle; }
+	.chat-smiles { text-align: center !important; }
+	.chat-smiles img { cursor: pointer; vertical-align: middle; margin: 0 1px; }
+	.chat-timeline { width: 32px; height: 11px; }
+	.chat-timeline div { width: 30px; height: 9px; background: #17B61A; }
+	.chat-palette { display: none; position: absolute; z-index: 10; width: 324px; padding: 2px; background: #FFFFFF; border: 1px solid black; line-height: 0; }
+	.chat-palette span { display: inline-block; width: 12px; height: 12px; margin: 0 1px 1px 0; cursor: pointer; }
+	.chat-info { margin: 7px 0 0 7px; font-size: 60%; }
+</style>
+
+<script n:nonce n:syntax="double">
+	document.addEventListener('DOMContentLoaded', () => {
+		const form = document.getElementById('chat-form');
+		const nameSelect = document.getElementById('chat-name');
+		const textInput = document.getElementById('chat-text');
+		const colorInput = document.getElementById('chat-color');
+		const colorButton = document.getElementById('chat-color-button');
+		const palette = document.getElementById('chat-palette');
+		const timeline = document.getElementById('chat-timeline');
+		const refreshLink = {{link refresh!}};
+		const refreshSeconds = 15;
+
+		const storage = {
+			get: (key) => { try { return localStorage.getItem(key); } catch (e) { return null; } },
+			set: (key, value) => { try { localStorage.setItem(key, value); } catch (e) {} },
+		};
+
+		const setColor = (color) => {
+			colorInput.value = color;
+			colorButton.style.background = color;
+			storage.set('chat-color', color);
+		};
+
+		// Zapamatované jméno a barva
+		const savedColor = storage.get('chat-color');
+		if (savedColor && /^#[0-9a-fA-F]{6}$/.test(savedColor)) {
+			setColor(savedColor);
+		}
+
+		const savedName = storage.get('chat-name');
+		if (savedName && nameSelect.querySelector('option[value="' + CSS.escape(savedName) + '"]')) {
+			nameSelect.value = savedName;
+		}
+
+		nameSelect.addEventListener('change', () => storage.set('chat-name', nameSelect.value));
+
+		// Paleta barev
+		colorButton.addEventListener('click', (e) => {
+			e.stopPropagation();
+			palette.style.left = colorButton.offsetLeft + 'px';
+			palette.style.top = (form.offsetTop + colorButton.offsetTop + colorButton.offsetHeight + 2) + 'px';
+			palette.style.display = palette.style.display === 'block' ? 'none' : 'block';
+		});
+
+		palette.addEventListener('click', (e) => {
+			if (e.target.dataset.color) {
+				setColor(e.target.dataset.color);
+				palette.style.display = 'none';
+			}
+		});
+
+		document.addEventListener('click', (e) => {
+			if (!palette.contains(e.target)) {
+				palette.style.display = 'none';
+			}
+		});
+
+		// Vložení smajlíku na pozici kurzoru
+		form.querySelectorAll('.chat-smiles img').forEach((img) => {
+			img.addEventListener('click', () => {
+				const code = ' ' + img.dataset.code + ' ';
+				const start = textInput.selectionStart ?? textInput.value.length;
+				const end = textInput.selectionEnd ?? textInput.value.length;
+
+				textInput.value = textInput.value.slice(0, start) + code + textInput.value.slice(end);
+				textInput.focus();
+				textInput.setSelectionRange(start + code.length, start + code.length);
+			});
+		});
+
+		// Odeslání zprávy
+		form.addEventListener('submit', (e) => {
+			e.preventDefault();
+
+			nameSelect.classList.toggle('has-error', !nameSelect.value);
+			textInput.classList.toggle('has-error', !textInput.value.trim());
+
+			if (!nameSelect.value || !textInput.value.trim()) {
+				return;
+			}
+
+			const data = new FormData(form);
+			data.append('send', 'Poslat');
+
+			naja.makeRequest('POST', form.action, data, { history: false })
+				.then(() => {
+					textInput.value = '';
+					countdown = refreshSeconds;
+				});
+		});
+
+		// Pravidelné obnovení zpráv s ukazatelem odpočtu
+		let countdown = refreshSeconds;
+
+		setInterval(() => {
+			countdown--;
+			timeline.style.width = Math.round(30 * countdown / refreshSeconds) + 'px';
+
+			if (countdown <= 0) {
+				countdown = refreshSeconds;
+				naja.makeRequest('GET', refreshLink, null, { history: false });
+			}
+		}, 1000);
+	});
+</script>

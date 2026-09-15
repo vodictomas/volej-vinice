@@ -1,7 +1,0 @@
-services:
-	- Admin\Form\PlayerFormFactory
-	- Admin\Grid\PlayerGridFactory
-	- Admin\Form\TeamFormFactory
-	- Admin\Grid\TeamGridFactory
-	- Admin\Grid\TermGridFactory
-	- Admin\Form\TermFormFactory

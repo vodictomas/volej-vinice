@@ -26,8 +26,14 @@ class TeamForm extends \ModulIS\Form\FormComponent
 				->where('id', $this->id)
 				->fetch();
 
+			if(!$teamRow)
+			{
+				$this->getPresenter()->flashMessage('Neexistující záznam', 'warning');
+				$this->getPresenter()->redirect(':Admin:Team:');
+			}
+
 			$this->getComponent('form')
-				->setDefaults($teamRow);
+				->setDefaults($teamRow->toArray());
 		}
 	}
 
@@ -36,15 +42,17 @@ class TeamForm extends \ModulIS\Form\FormComponent
 	{
 		$form = $this->getForm();
 
-		$form->addText('name', 'Název')
-			->setHtmlAttribute('class', 'form-control')
+		$form->addText('name', 'Název', null, 50)
 			->setRequired();
 
 		$form->addText('color', 'Barva')
-			->setRequired();
+			->setHtmlType('color')
+			->setDefaultValue('#33ccff')
+			->setRequired()
+			->addRule($form::Pattern, 'Zadejte barvu ve formátu #rrggbb', '#[0-9a-fA-F]{6}');
 
 		$form->addCheckbox('active', 'Zobrazovat')
-			->setHtmlAttribute('class', 'form-control');
+			->setDefaultValue(true);
 
 		$form->addSubmit('save', 'Uložit');
 

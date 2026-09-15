@@ -9,19 +9,21 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
 		<link rel="stylesheet" type="text/css" href="{webpack app.css}">
+		<link rel="icon" type="image/gif" href="{$basePath}/images/icon_ball.gif">
+		<style>
+			.flash-messages { position: fixed; top: 10px; right: 10px; z-index: 1050; max-width: 400px; }
+			.login-card { max-width: 380px; margin: 10vh auto 0; padding: 2rem; background: #fff; border: 1px solid #dee2e6; border-radius: .5rem; box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .1); text-align: center; }
+		</style>
 	</head>
-	{snippet flashMessages}
-		<div id="flashMessagesBox" class="pull-right">
-			<div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}" role="alert">
-				<button class="close" type="button" data-dismiss="alert" aria-label="Close">
-					<span aria-hidden="true">×</span>
-				</button>
-				{$flash->message|noescape}
-			</div>
-		</div>
-	{/snippet}
 
 	<body>
+		<div class="flash-messages" n:snippet="flashMessages">
+			<div n:foreach="$flashes as $flash" class="alert alert-{$flash->type} alert-dismissible" role="alert">
+				{$flash->message}
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Zavřít"></button>
+			</div>
+		</div>
+
 		{ifset #bodyContent}
 			{include #bodyContent}
 		{else}

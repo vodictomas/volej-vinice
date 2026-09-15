@@ -1,0 +1,47 @@
+MIME-Version: 1.0
+X-Mailer: Nette Framework
+Date: Tue, 15 Sep 2026 23:43:09 +0200
+From: =?UTF-8?B?Vm9sZWpiw6FsZWs=?= <vodictomas@gmail.com>
+To: test@example.com
+Subject: =?UTF-8?B?Vm9sZWpiw6FsZWsgLSBvYm5vdmVuw60gaGVzbGE=?=
+Message-ID: <5tduskh9ty@localhost>
+Content-Type: multipart/alternative;
+	boundary="--------s5xp69lfur"
+
+----------s5xp69lfur
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Dobrý den,
+
+pro Váš účet v aplikaci Volejbálek jsme obdrželi žádost o obnovení hesla.
+
+Nové heslo nastavíte na tomto odkazu, který je platný 1 hodinu:
+
+http://localhost/volej-vinice/www/user/login/set-password?token=106q8bz39rpb7faz0s1gra99sw0rrrmepw3jcqru <http://localhost/volej-vinice/www/user/login/set-password?token=106q8bz39rpb7faz0s1gra99sw0rrrmepw3jcqru>
+
+Pokud jste o obnovení nežádali, tento e-mail ignorujte, heslo zůstane beze změny.
+----------s5xp69lfur
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html>
+<html lang="cs">
+	<head>
+		<meta charset="utf-8">
+		<title>Volejbálek - obnovení hesla</title>
+	</head>
+	<body>
+		<p>Dobrý den,</p>
+
+		<p>pro Váš účet v aplikaci Volejbálek jsme obdrželi žádost o obnovení hesla.</p>
+
+		<p>Nové heslo nastavíte na tomto odkazu, který je platný 1 hodinu:</p>
+
+		<p><a href="http://localhost/volej-vinice/www/user/login/set-password?token=106q8bz39rpb7faz0s1gra99sw0rrrmepw3jcqru">http://localhost/volej-vinice/www/user/login/set-password?token=106q8bz39rpb7faz0s1gra99sw0rrrmepw3jcqru</a></p>
+
+		<p>Pokud jste o obnovení nežádali, tento e-mail ignorujte, heslo zůstane beze změny.</p>
+	</body>
+</html>
+
+----------s5xp69lfur--

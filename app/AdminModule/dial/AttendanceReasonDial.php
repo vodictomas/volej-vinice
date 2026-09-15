@@ -67,13 +67,13 @@ class AttendanceReasonDial
 			self::CELEBRATION => 'dortik.jpg',
 			self::NONSTOP => 'nonstop.jpg',
 			self::HOUBA_NONSTOP => 'mochnon.gif',
-			self::SLEEP => 'postel12.jpg',
+			self::SLEEP => 'postel2.jpg',
 			self::LEARN => 'kniha3.jpg',
 			self::SKI => 'ski2.jpg',
 			self::COLD => 'nemoc.jpg',
 			self::INJURY => 'invalida3.png',
-			self::BABY => 'kocarek2.png',
-			self::WORK => 'prace3.jpg',
+			self::BABY => 'kocarek2.jpg',
+			self::WORK => 'prace3.png',
 			self::WAITING => 'question.jpg'
 		];
 

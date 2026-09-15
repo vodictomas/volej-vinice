@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace User\Form;
 
-interface ILoginFormFactory
+interface LoginFormFactory
 {
 	function create(): LoginForm;
 }

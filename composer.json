@@ -19,16 +19,16 @@
 		"latte/latte": "^3.0",
 		"tracy/tracy": "^2.7",
 		"kravcik/latte-font-awesome-icon": "^1",
-		"ublaboo/datagrid": "^6.9",
+		"ublaboo/datagrid": "^7.2",
 		"modul-is/form": "^1",
 		"composer/composer": "^2.0",
         "contributte/webpack": "^2.1",
-		"dg/adminer-custom": "^1"
+		"dg/adminer": "^3.4"
 	},
 	"require-dev": {
         "modul-is/coding-standard": "^5",
-        "phpstan/phpstan-nette": "2",
-        "friendsofphp/php-cs-fixer": "v3.86"
+        "phpstan/phpstan-nette": "^2.0",
+        "friendsofphp/php-cs-fixer": "^3.86"
 	},
 	"autoload": {
 		"classmap": ["app/Bootstrap.php"]

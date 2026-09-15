@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Admin\Form;
 
+use Admin\Model\AttendanceModel;
 use ModulIS\Form\Form;
 
 class PlayerForm extends \ModulIS\Form\FormComponent
@@ -11,7 +12,8 @@ class PlayerForm extends \ModulIS\Form\FormComponent
 	public function __construct
 	(
 		private ?int $id,
-		private \Nette\Database\Explorer $Database
+		private \Nette\Database\Explorer $Database,
+		private AttendanceModel $AttendanceModel
 	)
 	{
 
@@ -26,8 +28,14 @@ class PlayerForm extends \ModulIS\Form\FormComponent
 				->where('id', $this->id)
 				->fetch();
 
+			if(!$playerRow)
+			{
+				$this->getPresenter()->flashMessage('Neexistující záznam', 'warning');
+				$this->getPresenter()->redirect(':Admin:Player:');
+			}
+
 			$this->getComponent('form')
-				->setDefaults($playerRow);
+				->setDefaults($playerRow->toArray());
 		}
 	}
 
@@ -36,17 +44,30 @@ class PlayerForm extends \ModulIS\Form\FormComponent
 	{
 		$form = $this->getForm();
 
-		$form->addText('nick', 'Jméno')
-				->setRequired();
+		$form->addText('nick', 'Jméno', null, 50)
+			->setRequired();
 
-		$teamArray = $this->Database->table('team')
-			->where('active', 1)
-			->fetchPairs('id', 'name');
+		/**
+		 * Upravovaný hráč může být v neaktivním týmu
+		 */
+		$teamSelection = $this->Database->table('team')
+			->order('name');
 
-		$form->addSelect('team_id', 'Tým', $teamArray)
-			->setPrompt('~ Vyberte ~');
+		if($this->id)
+		{
+			$teamSelection->where('team.active = 1 OR :player.id = ?', $this->id);
+		}
+		else
+		{
+			$teamSelection->where('active', 1);
+		}
 
-		$form->addCheckbox('active', 'Zobrazovat');
+		$form->addSelect('team_id', 'Tým', $teamSelection->fetchPairs('id', 'name'))
+			->setPrompt('~ Vyberte ~')
+			->setRequired();
+
+		$form->addCheckbox('active', 'Zobrazovat')
+			->setDefaultValue(true);
 
 		$form->addCheckbox('prefill', 'Předvyplnit docházku');
 
@@ -60,27 +81,30 @@ class PlayerForm extends \ModulIS\Form\FormComponent
 
 	public function successForm(Form $form, \Nette\Utils\ArrayHash $values): void
 	{
-		if($this->id)
+		$this->Database->transaction(function() use ($values)
 		{
-			$this->Database->table('player')
-				->where('id', $this->id)
-				->update($values);
-		}
-		else
-		{
-			$this->Database->table('player')
-				->insert($values);
-		}
+			if($this->id)
+			{
+				$this->Database->table('player')
+					->where('id', $this->id)
+					->update($values);
+
+				$playerId = $this->id;
+			}
+			else
+			{
+				$playerId = $this->Database->table('player')
+					->insert((array) $values)
+					->id;
+			}
+
+			if($values->prefill && $values->active)
+			{
+				$this->AttendanceModel->prefillPlayer($playerId);
+			}
+		});
 
 		$this->getPresenter()->flashMessage('Uloženo', 'success');
 		$this->getPresenter()->redirect(':Admin:Player:');
-	}
-
-
-	public function setId(?int $id): self
-	{
-		$this->id = $id;
-
-		return $this;
 	}
 }

@@ -21,9 +21,6 @@ class Bootstrap
 
 		$configurator->addConfig(__DIR__ . '/config/common.neon');
 		$configurator->addConfig(__DIR__ . '/config/local.neon');
-		$configurator->addConfig(__DIR__ . '/CoreModule/config.neon');
-		$configurator->addConfig(__DIR__ . '/AdminModule/config.neon');
-		$configurator->addConfig(__DIR__ . '/UserModule/config.neon');
 
 		$configurator->createRobotLoader()
 			->addDirectory(__DIR__)

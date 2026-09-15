@@ -14,7 +14,7 @@ class PlayerGrid extends \Core\Grid\BaseGrid
 	}
 
 
-	public function createComponentGrid(): \Ublaboo\DataGrid\DataGrid
+	public function createComponentGrid(): \Contributte\Datagrid\Datagrid
 	{
 		$grid = $this->getGrid();
 
