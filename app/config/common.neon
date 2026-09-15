@@ -1,6 +1,7 @@
 parameters:
 	wwwDir: %appDir%/../www
 	tempDir: %wwwDir%/../www
+	mailFrom: 'Volejbálek <vodictomas@gmail.com>'
 
 application:
 	errorPresenter: Error
@@ -12,12 +13,22 @@ session:
 	debugger: true
 
 tracy:
-	email: kravcik.pavel@gmail.com
-	fromEmail: hospodareni@futsalpm.cz
+	email: vodictomas@gmail.com
+	fromEmail: vodictomas@gmail.com
 
 services:
 	router: App\Router\RouterFactory::createRouter()
 	authenticator: User\Model\UserManager
+	- User\Mail\ResetPasswordMail(from: %mailFrom%)
+
+# Automatická registrace komponent (factory rozhraní s metodou create) a modelů
+search:
+	-
+		in: %appDir%
+		files:
+			- *Factory.php
+			- *Model.php
+			- *Mail.php
 
 http:
 	headers:

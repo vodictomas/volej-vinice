@@ -20,8 +20,12 @@ module.exports =
             filename: 'app.' + dateString + '.bundle.js',
             publicPath: ''
         },
+        resolve: {
+            extensions: ['.ts', '.js']
+        },
         module: {
             rules: [
+                {test: /\.ts$/, resolve: {fullySpecified: false}, use: [{loader: 'ts-loader', options: {transpileOnly: true, allowTsInNodeModules: true, configFile: path.join(__dirname, 'tsconfig.json')}}]},
                 {test: /\.css$/, use: [MiniCssExtractPlugin.loader, 'css-loader']},
                 {test: require.resolve('jquery'), use: [{loader: 'expose-loader', options: {exposes: {globalName: 'jQuery', override: true}}}, {loader: 'expose-loader', options: {exposes: {globalName: '$', override: true}}}]},
                 {test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, dependency: { not: ['url'] }, use: [{loader: "url-loader", options: {limit: 10000, mimetype: 'application/font-woff'}}], type: 'asset/resource'},

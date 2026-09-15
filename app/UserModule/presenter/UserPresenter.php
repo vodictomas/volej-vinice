@@ -4,35 +4,51 @@ declare(strict_types = 1);
 
 namespace UserModule;
 
-class UserPresenter extends \Core\Presenter\AuthPresenter
+use Core\Presenter\AuthPresenter;
+use Nette\DI\Attributes\Inject;
+use User\Form\UserForm;
+use User\Form\UserFormFactory;
+use User\Grid\UserGrid;
+use User\Grid\UserGridFactory;
+
+class UserPresenter extends AuthPresenter
 {
-	/**
-	 * @inject
-	 * @var \User\Form\IUserFormFactory
+	#[Inject]
+	public UserFormFactory $UserFormFactory;
 
-	public $IUserFormFactory;*/
+	#[Inject]
+	public UserGridFactory $UserGridFactory;
 
-	/**
-	 * @inject
-	 * @var \User\Grid\IUserGridFactory
+	private ?int $id = null;
 
-	 public $IUserGridFactory;*/
 
-	public function actionUserForm(?int $id = null)
+	public function actionEdit(int $id): void
 	{
-		$this['userForm']->prepare();
+		$this->id = $id;
+
+		$this->getComponent('userForm')
+			->prepare();
 
 		$this->template->id = $id;
+		$this->setView('form');
 	}
 
-	protected function createComponentUserGrid(): \User\Grid\UserGrid
+
+	public function actionAdd(): void
 	{
-		return $this->IUserGridFactory->create();
+		$this->template->id = null;
+		$this->setView('form');
 	}
 
-	protected function createComponentUserForm(): \User\Form\UserForm
+
+	protected function createComponentUserForm(): UserForm
 	{
-		return $this->IUserFormFactory->create()
-			->setId($this->getParameter('id'));
+		return $this->UserFormFactory->create($this->id);
+	}
+
+
+	protected function createComponentUserGrid(): UserGrid
+	{
+		return $this->UserGridFactory->create();
 	}
 }

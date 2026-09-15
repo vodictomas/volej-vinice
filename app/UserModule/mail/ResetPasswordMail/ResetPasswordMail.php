@@ -4,9 +4,37 @@ declare(strict_types = 1);
 
 namespace User\Mail;
 
-class ResetPasswordMail extends \Core\Object\MailObject
+use Nette\Application\LinkGenerator;
+use Nette\Bridges\ApplicationLatte\LatteFactory;
+use Nette\Mail\Mailer;
+use Nette\Mail\Message;
+
+class ResetPasswordMail
 {
-	public const SALT = 'nebilovskyborek22';
-	public $namespace = 'reset_password';
-	protected $subject = 'Resetování hesla';
+	public function __construct
+	(
+		private readonly string $from,
+		private readonly Mailer $Mailer,
+		private readonly LinkGenerator $LinkGenerator,
+		private readonly LatteFactory $LatteFactory
+	)
+	{
+	}
+
+
+	public function send(string $email, string $token): void
+	{
+		$html = $this->LatteFactory->create()
+			->renderToString(__DIR__ . '/resetPasswordMail.latte', [
+				'link' => $this->LinkGenerator->link('User:Login:setPassword', ['token' => $token]),
+			]);
+
+		$message = (new Message)
+			->setFrom($this->from)
+			->addTo($email)
+			->setSubject('Volejbálek - obnovení hesla')
+			->setHtmlBody($html);
+
+		$this->Mailer->send($message);
+	}
 }

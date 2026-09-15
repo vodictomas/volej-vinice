@@ -20,14 +20,61 @@ import '@fortawesome/fontawesome-free/css/regular.css';
 import '@fortawesome/fontawesome-free/css/solid.css';
 import '@fortawesome/fontawesome-free/css/fontawesome.css';
 
-import 'ublaboo-datagrid/assets/datagrid.js';
-import 'ublaboo-datagrid/assets/datagrid.css';
+import TomSelectLibrary from 'tom-select';
+import {
+	AutosubmitPlugin,
+	CheckboxPlugin,
+	ConfirmPlugin,
+	createDatagrids,
+	DatepickerPlugin,
+	EditablePlugin,
+	InlinePlugin,
+	ItemDetailPlugin,
+	NetteFormsPlugin,
+	SelectpickerPlugin,
+	SortableJS,
+	SortablePlugin,
+	TomSelect,
+	TreeViewPlugin,
+	VanillaDatepicker,
+} from '@contributte/datagrid/assets/index';
+import { NajaAjax } from '@contributte/datagrid/assets/ajax';
+import 'vanillajs-datepicker/css/datepicker-bs5.css';
+import 'tom-select/dist/css/tom-select.bootstrap5.css';
+import '@contributte/datagrid/assets/css/datagrid.css';
+import '@contributte/datagrid/assets/css/tom-select.css';
 
 import './js/ColorPicker2.js';
 
 import './css/login.css';
 import './css/dashboard.css';
 
+netteForms.initOnLoad();
+
+naja.defaultOptions.history = false;
+naja.formsHandler.netteForms = netteForms;
+naja.initialize();
 
 window.bootstrap = bootstrap;
 window.naja = naja;
+window.Nette = netteForms;
+
+document.addEventListener('DOMContentLoaded', () => {
+	createDatagrids(new NajaAjax(naja), {
+		datagrid: {
+			plugins: [
+				new AutosubmitPlugin(),
+				new CheckboxPlugin(),
+				new ConfirmPlugin(),
+				new EditablePlugin(),
+				new InlinePlugin(),
+				new ItemDetailPlugin(),
+				new NetteFormsPlugin(netteForms),
+				new SortablePlugin(new SortableJS()),
+				new DatepickerPlugin(new VanillaDatepicker({ buttonClass: 'btn' })),
+				new SelectpickerPlugin(new TomSelect(TomSelectLibrary)),
+				new TreeViewPlugin(),
+			],
+		},
+	});
+});

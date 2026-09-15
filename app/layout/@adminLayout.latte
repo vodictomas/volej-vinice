@@ -5,10 +5,15 @@
 		<a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" n:href=":Admin:Admin:">
 			Volejbálek
 		</a>
-		<div class="navbar-nav">
+		<div class="navbar-nav flex-row">
 			<div class="nav-item text-nowrap">
-				<a class="nav-link px-3" href="#">
-					Odhlásit
+				<a class="nav-link px-3" n:href=":Public:Public:">
+					Docházka
+				</a>
+			</div>
+			<div class="nav-item text-nowrap">
+				<a class="nav-link px-3" n:href="logout!">
+					Odhlásit ({$user->getIdentity()->login ?? ''})
 				</a>
 			</div>
 		</div>
@@ -35,6 +40,12 @@
 							<a class="nav-link active" aria-current="page" n:href=":Admin:Team:">
 								{icon users}
 								Týmy
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link active" aria-current="page" n:href=":User:User:">
+								{icon user-shield}
+								Uživatelé
 							</a>
 						</li>
 					</ul>

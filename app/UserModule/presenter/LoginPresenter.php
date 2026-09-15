@@ -5,53 +5,70 @@ declare(strict_types = 1);
 namespace UserModule;
 
 use Core\Presenter\BasePresenter;
+use Nette\Database\Table\ActiveRow;
 use Nette\DI\Attributes\Inject;
-use Nette\Security\Passwords;
-use User\Form\ILoginFormFactory;
 use User\Form\LoginForm;
+use User\Form\LoginFormFactory;
 use User\Form\ResetPasswordForm;
+use User\Form\ResetPasswordFormFactory;
+use User\Form\SetPasswordForm;
+use User\Form\SetPasswordFormFactory;
+use User\Model\UserModel;
 
 class LoginPresenter extends BasePresenter
 {
 	#[Inject]
-	public ILoginFormFactory $ILoginFormFactory;
+	public LoginFormFactory $LoginFormFactory;
 
 	#[Inject]
-	public Passwords $Passwords;
+	public ResetPasswordFormFactory $ResetPasswordFormFactory;
+
+	#[Inject]
+	public SetPasswordFormFactory $SetPasswordFormFactory;
+
+	#[Inject]
+	public UserModel $UserModel;
+
+	private ?ActiveRow $resetUserRow = null;
 
 
 	public function startup(): void
 	{
 		parent::startup();
+
 		if($this->getUser()->isLoggedIn())
 		{
 			$this->redirect(':Admin:Admin:');
 		}
 	}
 
-	public function actionResetPassword($h): void
-	{
-		try
-		{
-			$this->UserModel->resetPassword($h);
-		}
-		catch(\User\Exception\LoginException $exc)
-		{
-			$this->flashMessage($exc->getMessage(), 'danger');
-			$this->redirect(':User:Login:');
-		}
 
-		$this->flashMessage('Heslo úspěšně resetováno, na email Vám byly odeslány nové přihlašovací údaje', 'success');
-		$this->redirect(':User:Login:');
+	public function actionSetPassword(string $token = ''): void
+	{
+		$this->resetUserRow = $this->UserModel->getByResetToken($token);
+
+		if(!$this->resetUserRow)
+		{
+			$this->flashMessage('Odkaz pro nastavení hesla je neplatný nebo mu vypršela platnost', 'danger');
+			$this->redirect('reset');
+		}
 	}
 
-	public function createComponentLoginForm(): LoginForm
+
+	protected function createComponentLoginForm(): LoginForm
 	{
-		return $this->ILoginFormFactory->create();
+		return $this->LoginFormFactory->create();
 	}
 
-	public function createComponentResetPasswordForm(): ResetPasswordForm
+
+	protected function createComponentResetPasswordForm(): ResetPasswordForm
 	{
-		return $this->IResetPasswordFormFactory->create();
+		return $this->ResetPasswordFormFactory->create();
+	}
+
+
+	protected function createComponentSetPasswordForm(): SetPasswordForm
+	{
+		return $this->SetPasswordFormFactory->create($this->resetUserRow);
 	}
 }

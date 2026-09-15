@@ -4,17 +4,24 @@ declare(strict_types = 1);
 
 namespace User\Model;
 
-class UserManager implements \Nette\Security\Authenticator
+use Nette\Database\Explorer;
+use Nette\Security\AuthenticationException;
+use Nette\Security\Authenticator;
+use Nette\Security\Passwords;
+use Nette\Security\SimpleIdentity;
+
+class UserManager implements Authenticator
 {
 	public function __construct
 	(
-		protected \Nette\Database\Explorer $Database,
-		protected \Nette\Security\Passwords $Passwords
+		private readonly Explorer $Database,
+		private readonly Passwords $Passwords
 	)
 	{
 	}
 
-	public function authenticate(string $username, string $password): \Nette\Security\IIdentity
+
+	public function authenticate(string $username, string $password): SimpleIdentity
 	{
 		$userRow = $this->Database->table('user')
 			->where('login', $username)
@@ -22,18 +29,23 @@ class UserManager implements \Nette\Security\Authenticator
 
 		if(!$userRow)
 		{
-			throw new \Nette\Security\AuthenticationException('Login nebo heslo není správné');
+			throw new AuthenticationException('Login nebo heslo není správné', self::IdentityNotFound);
 		}
 
 		if(!$this->Passwords->verify($password, $userRow->password))
 		{
-			throw new \Nette\Security\AuthenticationException('Login nebo heslo není správné');
+			throw new AuthenticationException('Login nebo heslo není správné', self::InvalidCredential);
 		}
 
-		$identityArray = $userRow->toArray();
+		if($this->Passwords->needsRehash($userRow->password))
+		{
+			$userRow->update(['password' => $this->Passwords->hash($password)]);
+		}
 
-		unset($identityArray['password']);
-
-		return new \Nette\Security\Identity($userRow->id, null, $identityArray);
+		return new SimpleIdentity($userRow->id, null, [
+			'login' => $userRow->login,
+			'firstname' => $userRow->firstname,
+			'lastname' => $userRow->lastname,
+		]);
 	}
 }

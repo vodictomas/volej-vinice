@@ -15,9 +15,11 @@ final class RouterFactory
 	{
 		$router = new RouteList;
 
-		$router->addRoute('<module>/<presenter>/<action>[/<id>]', [
-			'module' => 'Admin',
-			'presenter' => 'Admin',
+		$router->addRoute('', 'Public:Public:default');
+
+		$router->addRoute('admin', 'Admin:Admin:default');
+
+		$router->addRoute('<module>/<presenter>[/<action>[/<id>]]', [
 			'action' => 'default'
 		]);
 

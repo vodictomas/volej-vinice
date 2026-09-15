@@ -3,124 +3,122 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<title>
-		{ifset header}{include header|striptags}{/ifset}
-		</title>
+		<title>{ifset title}{include title|stripHtml}{/ifset}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<link rel="apple-touch-icon" sizes="180x180" href="{$basePath}/apple-touch-icon.png">
-		<link rel="icon" type="image/png" href="{$basePath}/favicon.png">
+		<link rel="icon" type="image/gif" href="{$basePath}/images/icon_ball.gif">
 		<style>
-body {
-	
-  font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-	font-size: 10pt;
-	margin: 1pt;
-	padding: 3pt;
-	text-align: center;
+			body {
 
-}
-/*lightgreen*/
-.yes	{
-	text-decoration:none; background-color: white; 
-}
-.no	 {
-	text-decoration:none; background-color: white; 
-}
-.nevim	 {
-	text-decoration:none; background-color: #FFFFFF; 
-}
+			  font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+				font-size: 10pt;
+				margin: 1pt;
+				padding: 3pt;
+				text-align: center;
 
-.yes_pivo	{
-	text-decoration:none; background-color: white; 
-}
-.no_pivo	 {
-	text-decoration:none; background-color: white; 
-}
-.nevim_pivo  {
-	text-decoration:none; background-color: white;
-}
+			}
+			/*lightgreen*/
+			.yes	{
+				text-decoration:none; background-color: white;
+			}
+			.no	 {
+				text-decoration:none; background-color: white;
+			}
+			.nevim	 {
+				text-decoration:none; background-color: #FFFFFF;
+			}
 
-td	{
-	text-align: center;
-}
-th	{
-	padding-left: 3pt;
-	padding-right: 3pt;
-}
-h2	{
-	background-color: rgb(204,255,255);
-	padding:4pt 0pt;
-	border-left: 3ex solid rgb(102,255,255);
-	color: rgb(0,0,153);
-}
-a, a:visited {
-	color: blue;
-}
+			.yes_pivo	{
+				text-decoration:none; background-color: white;
+			}
+			.no_pivo	 {
+				text-decoration:none; background-color: white;
+			}
+			.nevim_pivo  {
+				text-decoration:none; background-color: white;
+			}
 
-img { border:0px solid gray;}
- 
-table.rozpis { border-width: 2px; border-style: solid; border-spacing: 0px; border-color: #000000; margin-bottom: 5px;}
-table.rozpis td { border: 1px solid #000000; }
-td.rozpis_dny { font-weight: bolder; background-color: lightblue; width: 75px; text-align: center; padding: 3px; padding-right: 6px; }
-td.rozpis_dny_mimo { font-weight: bolder; background-color: #DD0000; width: 75px; text-align: center; padding-left: 6px; padding-right: 6px; }
-td.rozpis_clovekA { background-color: orange;  width: 150px; text-align: center; padding: 4px;}
-td.rozpis_clovekB { background-color: rgb(0,204,255);  width: 150px; text-align: center; padding: 4px;}
-td.rozpis_clovekC { background-color: rgb(204,153,255);  width: 150px; text-align: center; padding: 4px;}
-td.rozpis_clovekZ { background-color: rgb(153,255,102);  width: 150px; text-align: center; padding: 4px;}
-td.rozpis_ct { width: 50px; text-align: center; padding: 0px; }
-td.rozpis_pivo_ct { width: 25px; text-align: center; padding: 0px;font-size: 80%; background-color: white;}
-td.volejbal_neni { width: 75px; text-align: center; padding: 4px; font-size: 80%;}
+			td	{
+				text-align: center;
+			}
+			th	{
+				padding-left: 3pt;
+				padding-right: 3pt;
+			}
+			h2	{
+				background-color: rgb(204,255,255);
+				padding:4pt 0pt;
+				border-left: 3ex solid rgb(102,255,255);
+				color: rgb(0,0,153);
+			}
+			a, a:visited {
+				color: blue;
+			}
 
-.main {
+			img { border:0px solid gray;}
 
-  margin: 0 auto;
-  width: 985px;
-  text-align: left;
-}
+			table.rozpis { border-width: 2px; border-style: solid; border-spacing: 0px; border-color: #000000; margin-bottom: 5px;}
+			table.rozpis td { border: 1px solid #000000; }
+			td.rozpis_dny { font-weight: bolder; background-color: lightblue; width: 75px; text-align: center; padding: 3px; padding-right: 6px; }
+			td.rozpis_dny_mimo { font-weight: bolder; background-color: #DD0000; width: 75px; text-align: center; padding-left: 6px; padding-right: 6px; }
+			td.rozpis_clovekA { background-color: orange;  width: 150px; text-align: center; padding: 4px;}
+			td.rozpis_clovekB { background-color: rgb(0,204,255);  width: 150px; text-align: center; padding: 4px;}
+			td.rozpis_clovekC { background-color: rgb(204,153,255);  width: 150px; text-align: center; padding: 4px;}
+			td.rozpis_clovekZ { background-color: rgb(153,255,102);  width: 150px; text-align: center; padding: 4px;}
+			td.rozpis_ct { width: 50px; text-align: center; padding: 0px; }
+			td.rozpis_pivo_ct { width: 25px; text-align: center; padding: 0px;font-size: 80%; background-color: white;}
+			td.volejbal_neni { width: 75px; text-align: center; padding: 4px; font-size: 80%;}
 
-table.rozpis td.hotovo {
-	font-weight: bolder;
-	border-right: 2px solid blue;
-	border-left: 2px solid blue;
-}
+			.main {
 
-.info { padding: 5pt; }
-.novinkaObr { margin: 2px; }
+			  margin: 0 auto;
+			  width: 985px;
+			  text-align: left;
+			}
+
+			table.rozpis td.hotovo {
+				font-weight: bolder;
+				border-right: 2px solid blue;
+				border-left: 2px solid blue;
+			}
+
+			.login-link { text-align: right; font-size: 70%; margin: 0 10px 10px 0; }
+			.flash { margin: 5px 10px; padding: 5px; border: 1px solid gray; background: #FFFFCC; }
+			.flash-danger, .flash-warning { background: #FFDDDD; }
+
+			.info { padding: 5pt; }
+			.novinkaObr { margin: 2px; }
 
 
-</style>
+		</style>
 	</head>
-	{snippet flashMessages}
-		<div id="flashMessagesBox" class="pull-right">
-			<div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}" role="alert">
-				<button class="close" type="button" data-dismiss="alert" aria-label="Close">
-					<span aria-hidden="true">×</span>
-				</button>
-				{$flash->message|noescape}
-			</div>
-		</div>
-	{/snippet}
 
 	<body>
 		<div style="text-align: center;">
 			<div class="main">
+				<div n:snippet="flashMessages">
+					<div n:foreach="$flashes as $flash" class="flash flash-{$flash->type}">{$flash->message}</div>
+				</div>
+
 				{include content}
+
+				<div class="login-link">
+					{if $user->isLoggedIn()}
+						<a n:href=":Admin:Admin:">Administrace</a>
+					{else}
+						<a n:href=":User:Login:">Přihlášení</a>
+					{/if}
+				</div>
 			</div>
 		</div>
 
-		<script src="{$basePath}/assets/js/ColorPicker2.js"></script>
-		<script>
-			var pp = new PicturePicker('window'); // Popup window
-			var pp2 = new PicturePicker(); // DIV style
-			var pp3a = new PicturePicker2('window'); // Popup window
-			var pp3 = new PicturePicker2(); // DIV style
-			
-			
-			
-			pp.writeDiv();
-			pp3a.writeDiv();
-		</script>
+		{*<script src="{$basePath}/assets/js/ColorPicker2.js"></script>*}
+
+		<script n:nonce src="{webpack app.js}"></script>
+		{ifset #js}
+			{include #js}
+		{/ifset}
 	</body>
+
 </html>
 

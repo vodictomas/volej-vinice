@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace User\Form;
 
-interface IUserFormFactory
+interface UserFormFactory
 {
 	function create(?int $id): UserForm;
 }
