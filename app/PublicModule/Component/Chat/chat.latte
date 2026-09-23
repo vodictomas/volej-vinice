@@ -42,7 +42,11 @@
 		</form>
 
 		<div class="chat-palette" id="chat-palette">
-			<span n:foreach="$colorArray as $color" style="background: {$color};" data-color="{$color}" title="{$color}"></span>
+			{*
+				Barvu nelze vypsat do style="background: {$color}" – Latte tam escapuje
+				mřížku na \#, takže se políčko nevybarví. Zápis polem escapování obejde.
+			*}
+			<span n:foreach="$colorArray as $color" style={[background => $color]} data-color="{$color}" title="{$color}"></span>
 		</div>
 	</div>
 
@@ -67,8 +71,10 @@
 	.chat-smiles img { cursor: pointer; vertical-align: middle; margin: 0 1px; }
 	.chat-timeline { width: 32px; height: 11px; }
 	.chat-timeline div { width: 30px; height: 9px; background: #17B61A; }
-	.chat-palette { display: none; position: absolute; z-index: 10; width: 324px; padding: 2px; background: #FFFFFF; border: 1px solid black; line-height: 0; }
-	.chat-palette span { display: inline-block; width: 12px; height: 12px; margin: 0 1px 1px 0; cursor: pointer; }
+	.chat-palette { display: none; position: absolute; z-index: 10; padding: 4px; background: #FFFFFF; border: 1px solid gray; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25); grid-template-columns: repeat(5, 18px); gap: 3px; }
+	.chat-palette.is-open { display: grid; }
+	.chat-palette span { box-sizing: border-box; width: 18px; height: 18px; border: 1px solid rgba(0, 0, 0, 0.25); cursor: pointer; }
+	.chat-palette span:hover { outline: 2px solid #333333; }
 	.chat-info { margin: 7px 0 0 7px; font-size: 60%; }
 </style>
 
@@ -111,21 +117,35 @@
 		// Paleta barev
 		colorButton.addEventListener('click', (e) => {
 			e.stopPropagation();
-			palette.style.left = colorButton.offsetLeft + 'px';
-			palette.style.top = (form.offsetTop + colorButton.offsetTop + colorButton.offsetHeight + 2) + 'px';
-			palette.style.display = palette.style.display === 'block' ? 'none' : 'block';
+
+			if (palette.classList.contains('is-open')) {
+				palette.classList.remove('is-open');
+
+				return;
+			}
+
+			// Umístit jde až po zobrazení – skrytá paleta nemá offsetParent.
+			palette.classList.add('is-open');
+
+			// offsetLeft/Top tlačítka je vůči <td>, ne vůči .chat-box, ke které
+			// je paleta pozicovaná, proto počítáme z pozic v okně.
+			const box = palette.offsetParent.getBoundingClientRect();
+			const button = colorButton.getBoundingClientRect();
+
+			palette.style.left = (button.left - box.left) + 'px';
+			palette.style.top = (button.bottom - box.top + 2) + 'px';
 		});
 
 		palette.addEventListener('click', (e) => {
 			if (e.target.dataset.color) {
 				setColor(e.target.dataset.color);
-				palette.style.display = 'none';
+				palette.classList.remove('is-open');
 			}
 		});
 
 		document.addEventListener('click', (e) => {
 			if (!palette.contains(e.target)) {
-				palette.style.display = 'none';
+				palette.classList.remove('is-open');
 			}
 		});
 

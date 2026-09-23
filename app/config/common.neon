@@ -1,6 +1,6 @@
 parameters:
 	wwwDir: %appDir%/../www
-	mailFrom: 'Volejbálek <vodictomas@gmail.com>'
+	mailFrom: 'Volejbálek <noreply@volej-vinice.cz>'
 
 application:
 	errorPresenter: Error:Error
@@ -13,7 +13,7 @@ session:
 
 tracy:
 	email: vodictomas@gmail.com
-	fromEmail: vodictomas@gmail.com
+	fromEmail: noreply@volej-vinice.cz
 
 services:
 	router: App\Router\RouterFactory::createRouter()
