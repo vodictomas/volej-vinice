@@ -1,11 +1,13 @@
 <?php
 
-	$dbuser = "root";
-	$dbpass = "root";
-	$dbhost = "localhost";
-	$dbdatabase = "volejbalek";
-	
-	define("TEST_QUERIES",0);
+$dbuser = "volejbalek86";
+$dbpass = "ZegoniVinice20:00";
+//$dbhost = "mysql.webzdarma.cz";
+$dbhost = "sql2.webzdarma.cz";
+$dbdatabase = "volejbalek86";
+
+
+define("TEST_QUERIES",0);
 	define("LOG_QUERIES",0);
 	
 	//define("DB_MYSQL_ASSOC",MYSQL_ASSOC);

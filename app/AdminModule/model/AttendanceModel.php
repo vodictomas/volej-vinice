@@ -54,6 +54,28 @@ class AttendanceModel
 	}
 
 
+	/**
+	 * Zruší docházku "přijdu" v budoucích termínech
+	 */
+	public function clearPlayer(int $playerId): void
+	{
+		$termIdArray = $this->Database->table('term')
+			->where('date >= ?', (new DateTime)->format('Y-m-d'))
+			->fetchPairs(null, 'id');
+
+		if(!$termIdArray)
+		{
+			return;
+		}
+
+		$this->Database->table('attendance')
+			->where('player_id', $playerId)
+			->where('term_id', $termIdArray)
+			->where('type', AttendanceTypeDial::YES)
+			->delete();
+	}
+
+
 	private function insertYes(int $playerId, int $termId): void
 	{
 		$this->Database->table('attendance')
