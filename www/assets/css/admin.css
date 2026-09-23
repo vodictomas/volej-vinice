@@ -19,6 +19,8 @@
 	--vv-muted: #6b7385;
 	--vv-accent: #4453c4;
 	--vv-accent-soft: #eef0fc;
+	--vv-danger: #b8303c;
+	--vv-danger-soft: #fdecee;
 	--vv-radius: 0.6rem;
 	--vv-shadow: 0 1px 2px rgb(24 28 40 / 6%), 0 4px 12px rgb(24 28 40 / 5%);
 
@@ -880,6 +882,224 @@ h1, h2, h3, h4, h5, h6
 	color: var(--vv-accent);
 }
 
+/* ---------------------------------------------------------------- záložky */
+
+.vv-tabs
+{
+	display: flex;
+	gap: 0.25rem;
+	width: fit-content;
+	padding: 0.25rem;
+	margin-bottom: 1rem;
+	background: var(--vv-surface);
+	border: 1px solid var(--vv-border);
+	border-radius: var(--vv-radius);
+	box-shadow: var(--vv-shadow);
+}
+
+.vv-tab
+{
+	display: inline-flex;
+	gap: 0.45rem;
+	align-items: center;
+	padding: 0.45rem 0.9rem;
+	font-size: 0.875rem;
+	font-weight: 500;
+	color: var(--vv-muted);
+	text-decoration: none;
+	border-radius: 0.45rem;
+	transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.vv-tab:hover
+{
+	color: var(--vv-text);
+	background: var(--vv-canvas);
+}
+
+.vv-tab.is-active
+{
+	color: var(--vv-accent);
+	background: var(--vv-accent-soft);
+}
+
+/* -------------------------------------------------------------- kalendář */
+
+.vv-calendar
+{
+	padding: 1rem 1.1rem 1.1rem;
+}
+
+.vv-calendar-head
+{
+	display: flex;
+	gap: 0.4rem;
+	align-items: center;
+	margin-bottom: 0.9rem;
+}
+
+.vv-calendar-title
+{
+	min-width: 9.5rem;
+	font-size: 1.05rem;
+	text-align: center;
+}
+
+.vv-calendar-today
+{
+	margin-left: auto;
+}
+
+.vv-calendar-scroll
+{
+	overflow-x: auto;
+}
+
+.vv-calendar-grid
+{
+	width: 100%;
+	table-layout: fixed;
+	border-collapse: collapse;
+}
+
+.vv-calendar-grid th
+{
+	padding: 0 0.35rem 0.45rem;
+	font-size: 0.75rem;
+	font-weight: 600;
+	color: var(--vv-muted);
+	text-align: left;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+.vv-calendar-day
+{
+	height: 5.5rem;
+	padding: 0.3rem;
+	vertical-align: top;
+	border: 1px solid var(--vv-border);
+}
+
+.vv-calendar-day.is-outside
+{
+	background: #fafbfd;
+}
+
+.vv-calendar-date
+{
+	display: block;
+	margin-bottom: 0.25rem;
+	font-size: 0.8125rem;
+	color: var(--vv-muted);
+}
+
+.vv-calendar-day.is-outside .vv-calendar-date
+{
+	color: #b9c0d0;
+}
+
+.vv-calendar-day.is-today .vv-calendar-date
+{
+	width: 1.5rem;
+	height: 1.5rem;
+	font-weight: 600;
+	line-height: 1.5rem;
+	color: #fff;
+	text-align: center;
+	background: var(--vv-accent);
+	border-radius: 50%;
+}
+
+.vv-calendar-term
+{
+	display: block;
+	padding: 0.3rem 0.4rem;
+	color: var(--vv-accent);
+	text-decoration: none;
+	background: var(--vv-accent-soft);
+	border: 1px solid transparent;
+	border-left: 3px solid var(--vv-accent);
+	border-radius: 0.3rem;
+	transition: border-color 0.15s ease;
+}
+
+.vv-calendar-term:hover
+{
+	border-color: var(--vv-accent);
+}
+
+.vv-calendar-term.is-cancelled
+{
+	color: var(--vv-danger);
+	background: var(--vv-danger-soft);
+	border-left-color: var(--vv-danger);
+}
+
+.vv-calendar-term.is-cancelled:hover
+{
+	border-color: var(--vv-danger);
+}
+
+.vv-calendar-term-label
+{
+	display: block;
+	font-size: 0.8125rem;
+	font-weight: 600;
+}
+
+.vv-calendar-term.is-cancelled .vv-calendar-term-label
+{
+	text-decoration: line-through;
+}
+
+.vv-calendar-term-count
+{
+	display: block;
+	font-size: 0.75rem;
+	color: var(--vv-muted);
+}
+
+.vv-calendar-legend
+{
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35rem;
+	align-items: center;
+	margin: 0.9rem 0 0.2rem;
+	font-size: 0.75rem;
+	color: var(--vv-muted);
+}
+
+.vv-calendar-key
+{
+	width: 0.7rem;
+	height: 0.7rem;
+	background: var(--vv-accent-soft);
+	border-left: 3px solid var(--vv-accent);
+	border-radius: 0.2rem;
+}
+
+.vv-calendar-key.is-cancelled
+{
+	background: var(--vv-danger-soft);
+	border-left-color: var(--vv-danger);
+}
+
+.vv-calendar-note
+{
+	margin-left: auto;
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+	.vv-tab,
+	.vv-calendar-term
+	{
+		transition: none;
+	}
+}
+
 /* -------------------------------------------------------------- responzivní */
 
 @media (max-width: 991.98px)
@@ -938,5 +1158,17 @@ h1, h2, h3, h4, h5, h6
 	.form-horizontal .col-form-label
 	{
 		padding-bottom: 0.15rem;
+	}
+
+	/* sedm sloupců se na mobil nevejde, radši vodorovné posouvání než nečitelná drť */
+	.vv-calendar-grid
+	{
+		min-width: 33rem;
+	}
+
+	.vv-calendar-note
+	{
+		width: 100%;
+		margin-left: 0;
 	}
 }
