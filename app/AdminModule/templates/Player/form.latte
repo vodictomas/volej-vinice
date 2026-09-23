@@ -1,5 +1,12 @@
 {define header}
-	Úprava hráče
+	{if $id}Úprava hráče{else}Nový hráč{/if}
+{/define}
+
+{define toolbox}
+	<a n:href="default" class="btn btn-outline-secondary">
+		<span class="fa-solid fa-reply fa-fw"></span>
+		Zpět na přehled
+	</a>
 {/define}
 
 {block content}

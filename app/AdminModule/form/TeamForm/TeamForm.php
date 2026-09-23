@@ -51,6 +51,13 @@ class TeamForm extends \ModulIS\Form\FormComponent
 			->setRequired()
 			->addRule($form::Pattern, 'Zadejte barvu ve formátu #rrggbb', '#[0-9a-fA-F]{6}');
 
+		$form->addInteger('position', 'Pozice')
+			/* nativní bublina prohlížeče, HTML by se vypsalo doslova – Bootstrap Tooltip v bundlu není */
+			->setTooltip('Pořadí ve výpisu docházky, od nejmenšího čísla. Domácí tým nahoru, hosté dolů; při shodě rozhoduje abeceda.')
+			->setDefaultValue($this->id ? 0 : $this->getNextPosition())
+			->setRequired()
+			->addRule($form::Range, 'Pozice musí být mezi %d a %d', [0, 999]);
+
 		$form->addCheckbox('active', 'Zobrazovat')
 			->setDefaultValue(true);
 
@@ -59,6 +66,16 @@ class TeamForm extends \ModulIS\Form\FormComponent
 		$form->onSuccess[] = [$this, 'successForm'];
 
 		return $form;
+	}
+
+
+	/**
+	 * Nový tým se zařadí na konec, ať nepřebije stávající pořadí
+	 */
+	private function getNextPosition(): int
+	{
+		return (int) $this->Database->table('team')
+			->max('position') + 1;
 	}
 
 

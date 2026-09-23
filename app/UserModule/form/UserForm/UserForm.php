@@ -52,7 +52,7 @@ class UserForm extends FormComponent
 
 		$form->addEmail('email', 'E-mail', 100)
 			->setRequired()
-			->setOption('description', 'Slouží pro obnovení zapomenutého hesla');
+			->setTooltip('Slouží pro obnovení zapomenutého hesla');
 
 		$form->addText('firstname', 'Jméno', null, 50)
 			->setRequired();
@@ -69,7 +69,7 @@ class UserForm extends FormComponent
 
 		if($this->id)
 		{
-			$password->setOption('description', 'Vyplňte jen pokud chcete heslo změnit');
+			$password->setTooltip('Vyplňte jen pokud chcete heslo změnit');
 		}
 
 		$form->addSubmit('save', 'Uložit');

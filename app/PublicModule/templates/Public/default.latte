@@ -35,10 +35,10 @@
 							{continueIf !isset($playerArray[$teamRow->id])}
 							{foreach $playerArray[$teamRow->id] as $playerId => $player}
 								<tr>
-									<td n:if="$iterator->isFirst()" style="background-color: {$teamRow->color|noescape};font-weight:bold;width: 30px;" rowspan="{count($playerArray[$teamRow->id])}">
+									<td n:if="$iterator->isFirst()" style="background-color: {$teamRow->color|color|noescape};font-weight:bold;width: 30px;" rowspan="{count($playerArray[$teamRow->id])}">
 										{foreach mb_str_split($teamRow->name) as $char}{if $char === ' '}&nbsp;{else}{$char}{/if}<br n:if="!$iterator->isLast()">{/foreach}
 									</td>
-									<td class="rozpis_clovekA" style="background-color: {$teamRow->color|noescape};">
+									<td class="rozpis_clovekA" style="background-color: {$teamRow->color|color|noescape};">
 										{$player}
 									</td>
 									{foreach $termArray as $term => $available}

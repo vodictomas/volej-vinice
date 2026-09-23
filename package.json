@@ -1,58 +1,24 @@
 {
-  "name": "2018-03-nette-webpack",
+  "name": "volej-vinice",
   "version": "1.0.0",
-  "description": "Nette Framework + Webpack 4",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/trainit/2018-03-nette-webpack.git"
-  },
-  "keywords": [
-    "nette",
-    "framework",
-    "webpack"
-  ],
-  "author": "Milan Felix Sulc",
+  "description": "Volejbálek – docházka",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/trainit/2018-03-nette-webpack/issues"
-  },
-  "homepage": "https://github.com/trainit/2018-03-nette-webpack#readme",
+  "private": true,
   "dependencies": {
     "@contributte/datagrid": "^7.1.0",
-    "admin-lte": "v4.0.0-rc4",
     "bootstrap": "^5",
-    "bootstrap-datepicker": "^1.9.0",
-    "bootstrap-select": "^1.13.12",
-    "codemirror": "^5.43.0",
-    "jquery": "^3.3.1",
-    "jquery-autocomplete": "^1.2.8",
-    "jquery-ui": "^1.12.1",
-    "moment": "^2.24.0",
     "naja": "^3.3.3",
-    "nette-forms": "^3.5.3",
-    "selectize-bootstrap4-theme": "^2.0.2",
-    "webpack": "^5"
+    "nette-forms": "^3.5.3"
   },
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "^7",
-    "@popperjs/core": "^2.0.6",
-    "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.7.1",
     "css-minimizer-webpack-plugin": "^3.4.1",
-    "expose-loader": "^3.1.0",
-    "file-loader": "^6.0.0",
     "mini-css-extract-plugin": "^2.6.0",
-    "perfect-scrollbar": "^1.4.0",
-    "style-loader": "^2.0.0",
-    "tempusdominus-bootstrap-4": "^5.1.2",
-    "terser-webpack-plugin": "^5",
     "ts-loader": "^9.6.2",
     "typescript": "^5.9.3",
-    "url-loader": "^4.0.0",
+    "webpack": "^5",
     "webpack-cli": "^4.9.2",
-    "webpack-dev-server": "^5",
-    "webpack-manifest-plugin": "^5.0.0",
-    "webpack-nano": "^1.1.1"
+    "webpack-manifest-plugin": "^5.0.0"
   },
   "scripts": {
     "dev": "webpack --mode development --watch --progress",

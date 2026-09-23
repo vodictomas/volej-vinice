@@ -1,0 +1,48 @@
+{define header}
+	{$errorTitle}
+{/define}
+
+{define #bodyContent}
+	<main class="error-page">
+		<div class="error-card">
+			{*
+				Píchnutý míč – kreslený inline, ať chybová stránka nestojí
+				na žádném externím souboru, který se taky nemusí načíst.
+			*}
+			<svg class="error-ball" viewBox="0 0 260 200" role="img" aria-label="Píchnutý volejbalový míč">
+				<ellipse class="error-ball-shadow" cx="118" cy="176" rx="62" ry="9"/>
+
+				<path class="error-ball-body" d="M116 30
+					C152 30 180 50 189 82
+					C192 92 180 100 165 94
+					C180 126 154 168 112 168
+					C70 168 42 138 42 104
+					C42 62 74 30 116 30 Z"/>
+
+				<g class="error-ball-seam">
+					<path d="M60 66 C94 82 116 112 122 166"/>
+					<path d="M44 114 C86 108 132 120 166 146"/>
+					<path d="M100 32 C112 60 138 76 172 86"/>
+				</g>
+
+				{* prasklina, ze které uniká vzduch *}
+				<path class="error-ball-hole" d="M147 79
+					l10 7 l-4 5 l9 5 l-10 -1 l-3 7 l-5 -8 l-9 2 l5 -8 l-4 -6 Z"/>
+
+				<g class="error-ball-air">
+					<path d="M176 74 c10 -7 16 3 25 -4"/>
+					<path d="M186 90 c11 -5 17 5 26 -2"/>
+					<path d="M180 106 c9 -4 14 4 22 0"/>
+				</g>
+			</svg>
+
+			<p class="error-code">Chyba {$errorCode}</p>
+			<h1>{$errorTitle}</h1>
+			<p class="error-note">{$errorNote}</p>
+
+			<a n:href=":Public:Public:" class="btn btn-primary">Zpět na docházku</a>
+		</div>
+	</main>
+{/define}
+
+{block content}{/block}

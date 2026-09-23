@@ -1,10 +1,9 @@
 parameters:
 	wwwDir: %appDir%/../www
-	tempDir: %wwwDir%/../www
 	mailFrom: 'Volejbálek <vodictomas@gmail.com>'
 
 application:
-	errorPresenter: Error
+	errorPresenter: Error:Error
 	mapping:
 		*: *Module\*Presenter
 

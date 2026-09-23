@@ -34,6 +34,18 @@ class TermGrid extends \Core\Grid\BaseGrid
 
 		$grid->setDefaultSort(['date' => 'ASC']);
 
+		/**
+		 * Filtr 'period' nepatří k žádnému sloupci, takže ho datagrid do hlavičky tabulky
+		 * nevykreslí. Neodeslaný select pak spadne na "Please select a valid option",
+		 * filtrační formulář je neplatný a filtrování skončí chybou. Vykreslením filtrů
+		 * nad tabulkou se odešlou všechny a zároveň je konečně vidět, že se ve výchozím
+		 * stavu zobrazují jen budoucí termíny.
+		 */
+		$grid->setOuterFilterRendering();
+
+		/* sbalování filtrů stojí na Bootstrap Collapse, který v bundlu nemáme */
+		$grid->setCollapsibleOuterFilters(false);
+
 		$grid->addColumnDateTime('date', 'Datum')
 			->setFormat('j. n. Y')
 			->setAlign('center')
@@ -73,13 +85,13 @@ class TermGrid extends \Core\Grid\BaseGrid
 		$grid->setDefaultFilter(['period' => 'future']);
 
 		$grid->addActionCallback('toggle', '')
-			->setClass(fn(ActiveRow $item) => 'btn btn-sm ' . ($item->available ? 'btn-warning' : 'btn-success'))
+			->setClass(fn(ActiveRow $item) => 'btn btn-sm ' . ($item->available ? 'btn-outline-secondary' : 'btn-outline-success'))
 			->setTitle(fn(ActiveRow $item) => $item->available ? 'Zrušit trénink' : 'Obnovit trénink')
 			->setIcon(fn(ActiveRow $item) => $item->available ? 'ban' : 'check')
 			->onClick[] = [$this, 'toggleAvailable'];
 
 		$grid->addActionCallback('delete', '')
-			->setClass('btn btn-danger btn-sm')
+			->setClass('btn btn-outline-danger btn-sm')
 			->setTitle('Smazat termín')
 			->setIcon('trash')
 			->setConfirmation(new StringConfirmation('Opravdu smazat termín včetně zapsané docházky?'))

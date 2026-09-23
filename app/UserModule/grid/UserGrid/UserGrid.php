@@ -50,12 +50,12 @@ class UserGrid extends \Core\Grid\BaseGrid
 			->setFilterText();
 
 		$grid->addAction('edit', '', ':User:User:edit')
-			->setClass('btn btn-warning btn-sm')
+			->setClass('btn btn-outline-secondary btn-sm')
 			->setTitle('Upravit uživatele')
 			->setIcon('edit');
 
 		$grid->addActionCallback('delete', '')
-			->setClass('btn btn-danger btn-sm')
+			->setClass('btn btn-outline-danger btn-sm')
 			->setTitle('Smazat uživatele')
 			->setIcon('trash')
 			->setConfirmation(new StringConfirmation('Opravdu smazat uživatele %s?', 'login'))
