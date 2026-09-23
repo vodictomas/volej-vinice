@@ -97,26 +97,20 @@ class Chat extends BaseComponent
 
 
 	/**
-	 * Paleta 216 "web-safe" barev jako ve staré aplikaci
+	 * Základní paleta seřazená podle barevného kruhu – neutrální odstíny, pak
+	 * teplé a studené. Stará aplikace nabízela všech 216 "web-safe" barev, což
+	 * byla nepřehledná změť. Světlé odstíny tu nejsou, na světlém pozadí chatu
+	 * by nebyly čitelné. Zalomení po pěti odpovídá mřížce palety v šabloně.
 	 *
 	 * @return string[]
 	 */
 	private function getColorArray(): array
 	{
-		$colorArray = [];
-		$stepArray = ['00', '33', '66', '99', 'CC', 'FF'];
-
-		foreach($stepArray as $green)
-		{
-			foreach($stepArray as $red)
-			{
-				foreach($stepArray as $blue)
-				{
-					$colorArray[] = '#' . $red . $green . $blue;
-				}
-			}
-		}
-
-		return $colorArray;
+		return [
+			'#000000', '#666666', '#999999', '#996633', '#CC0000',
+			'#FF0000', '#FF6600', '#FF9900', '#CC9900', '#669900',
+			'#009900', '#00CC66', '#009999', '#00CCCC', '#33CCFF',
+			'#0066FF', '#0000CC', '#6600CC', '#CC00CC', '#FF0099'
+		];
 	}
 }
