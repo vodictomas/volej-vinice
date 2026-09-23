@@ -83,8 +83,14 @@ class PlayerForm extends \ModulIS\Form\FormComponent
 	{
 		$this->Database->transaction(function() use ($values)
 		{
+			$prefillBefore = false;
+
 			if($this->id)
 			{
+				$prefillBefore = (bool) $this->Database->table('player')
+					->where('id', $this->id)
+					->fetchField('prefill');
+
 				$this->Database->table('player')
 					->where('id', $this->id)
 					->update($values);
@@ -101,6 +107,10 @@ class PlayerForm extends \ModulIS\Form\FormComponent
 			if($values->prefill && $values->active)
 			{
 				$this->AttendanceModel->prefillPlayer($playerId);
+			}
+			elseif(!$values->prefill && $prefillBefore)
+			{
+				$this->AttendanceModel->clearPlayer($playerId);
 			}
 		});
 
