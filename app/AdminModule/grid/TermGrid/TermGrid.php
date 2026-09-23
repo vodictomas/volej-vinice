@@ -84,6 +84,11 @@ class TermGrid extends \Core\Grid\BaseGrid
 
 		$grid->setDefaultFilter(['period' => 'future']);
 
+		$grid->addAction('edit', '', ':Admin:Term:edit')
+			->setClass('btn btn-outline-secondary btn-sm')
+			->setTitle('Upravit termín')
+			->setIcon('edit');
+
 		$grid->addActionCallback('toggle', '')
 			->setClass(fn(ActiveRow $item) => 'btn btn-sm ' . ($item->available ? 'btn-outline-secondary' : 'btn-outline-success'))
 			->setTitle(fn(ActiveRow $item) => $item->available ? 'Zrušit trénink' : 'Obnovit trénink')
