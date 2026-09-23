@@ -18,9 +18,6 @@ class TermCalendar extends BaseComponent
 {
 	private const MonthFormat = 'Y-m';
 
-	/**
-	 * @var array<int, string>
-	 */
 	private const MonthNameArray = [
 		1 => 'Leden',
 		2 => 'Únor',
@@ -33,7 +30,7 @@ class TermCalendar extends BaseComponent
 		9 => 'Září',
 		10 => 'Říjen',
 		11 => 'Listopad',
-		12 => 'Prosinec',
+		12 => 'Prosinec'
 	];
 
 	/**
@@ -136,7 +133,7 @@ class TermCalendar extends BaseComponent
 		$keyArray = [
 			AttendanceTypeDial::YES => 'yes',
 			AttendanceTypeDial::NO => 'no',
-			AttendanceTypeDial::WAITING => 'waiting',
+			AttendanceTypeDial::WAITING => 'waiting'
 		];
 
 		$selection = $this->Database->table('attendance')

@@ -82,7 +82,7 @@ class Chat extends BaseComponent
 			->insert([
 				'player_id' => $values->player_id,
 				'color' => $values->color,
-				'text' => $values->text,
+				'text' => $values->text
 			]);
 
 		if($this->getPresenter()->isAjax())

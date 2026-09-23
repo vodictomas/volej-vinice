@@ -35,7 +35,7 @@ class TermEditForm extends FormComponent
 		$this->getComponent('form')
 			->setDefaults([
 				'date' => $termRow->date->format('Y-m-d'),
-				'available' => (bool) $termRow->available,
+				'available' => (bool) $termRow->available
 			]);
 	}
 
@@ -87,7 +87,7 @@ class TermEditForm extends FormComponent
 			->where('id', $this->id)
 			->update([
 				'date' => $values->date,
-				'available' => $values->available ? 1 : 0,
+				'available' => $values->available ? 1 : 0
 			]);
 
 		$this->getPresenter()->flashMessage('Uloženo', 'success');

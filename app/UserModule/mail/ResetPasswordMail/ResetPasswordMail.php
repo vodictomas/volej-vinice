@@ -26,7 +26,7 @@ class ResetPasswordMail
 	{
 		$html = $this->LatteFactory->create()
 			->renderToString(__DIR__ . '/resetPasswordMail.latte', [
-				'link' => $this->LinkGenerator->link('User:Login:setPassword', ['token' => $token]),
+				'link' => $this->LinkGenerator->link('User:Login:setPassword', ['token' => $token])
 			]);
 
 		$message = (new Message)

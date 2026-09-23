@@ -82,7 +82,7 @@ class AttendanceModel
 			->insert([
 				'player_id' => $playerId,
 				'term_id' => $termId,
-				'type' => AttendanceTypeDial::YES,
+				'type' => AttendanceTypeDial::YES
 			]);
 	}
 }

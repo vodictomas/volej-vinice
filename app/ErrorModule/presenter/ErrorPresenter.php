@@ -14,16 +14,13 @@ use Tracy\ILogger;
  */
 final class ErrorPresenter extends Presenter
 {
-	/**
-	 * @var array<int, array{string, string}> kód => [nadpis, vysvětlení]
-	 */
 	private const MessageArray = [
 		400 => ['Neplatný požadavek', 'Odkaz je poškozený nebo v něm chybí údaje. Zkuste se vrátit na docházku a akci zopakovat.'],
 		403 => ['Sem se nedostanete', 'Tahle část je jen pro přihlášené správce.'],
 		404 => ['Stránka nenalezena', 'Adresa neexistuje nebo se přesunula jinam.'],
 		405 => ['Takhle to nejde', 'Akce se musí vyvolat ze stránky, ne přímo z adresního řádku.'],
 		410 => ['Stránka už neexistuje', 'Obsah byl odstraněn a zpátky se nevrátí.'],
-		500 => ['Něco se pokazilo', 'Chybu jsme zaznamenali a podíváme se na ni.'],
+		500 => ['Něco se pokazilo', 'Chybu jsme zaznamenali a podíváme se na ni.']
 	];
 
 

@@ -105,7 +105,7 @@ class UserModel
 
 		$userRow->update([
 			'reset_token' => hash('sha256', $token),
-			'reset_expire' => (new DateTime)->modify(self::ResetTokenValidity),
+			'reset_expire' => (new DateTime)->modify(self::ResetTokenValidity)
 		]);
 
 		$this->ResetPasswordMail->send($userRow->email, $token);
@@ -126,7 +126,7 @@ class UserModel
 		$userRow->update([
 			'password' => $this->Passwords->hash($password),
 			'reset_token' => null,
-			'reset_expire' => null,
+			'reset_expire' => null
 		]);
 	}
 }
