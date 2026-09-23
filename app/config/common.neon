@@ -1,9 +1,9 @@
 parameters:
 	wwwDir: %appDir%/../www
-	tempDir: %wwwDir%/../www
+	mailFrom: 'Volejbálek <vodictomas@gmail.com>'
 
 application:
-	errorPresenter: Error
+	errorPresenter: Error:Error
 	mapping:
 		*: *Module\*Presenter
 
@@ -12,12 +12,22 @@ session:
 	debugger: true
 
 tracy:
-	email: kravcik.pavel@gmail.com
-	fromEmail: hospodareni@futsalpm.cz
+	email: vodictomas@gmail.com
+	fromEmail: vodictomas@gmail.com
 
 services:
 	router: App\Router\RouterFactory::createRouter()
 	authenticator: User\Model\UserManager
+	- User\Mail\ResetPasswordMail(from: %mailFrom%)
+
+# Automatická registrace komponent (factory rozhraní s metodou create) a modelů
+search:
+	-
+		in: %appDir%
+		files:
+			- *Factory.php
+			- *Model.php
+			- *Mail.php
 
 http:
 	headers:
@@ -46,5 +56,21 @@ forms:
 		MIME_TYPE : Nahraný soubor není v podporovaném formátu
 
 latte:
-	macros:
-		- Kravcik\Macros\FontAwesomeMacro
+	extensions:
+		- Kravcik\LatteFontAwesomeIcon\Extension(defaultStyle: fa-solid, defaultFixedWidth: true, defaultElement: span)
+		- ModulIS\Extension\FormExtension
+
+extensions:
+	webpack: Contributte\Webpack\DI\WebpackExtension(%debugMode%, %consoleMode%)
+
+
+webpack:
+	build:
+		directory: %wwwDir%/dist
+		publicPath: /dist/
+	devServer:
+		url: http://localhost:3500
+		enabled: %debugMode%
+		publicUrl: http://localhost:3500
+	manifest:
+		name: manifest.json

@@ -1,27 +1,38 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace User\Grid;
+
+use Contributte\Datagrid\Column\Action\Confirmation\StringConfirmation;
+use Contributte\Datagrid\Datagrid;
+use Nette\Database\Explorer;
+use Nette\Database\Table\ActiveRow;
+use Nette\Security\User;
+use User\Model\UserModel;
 
 class UserGrid extends \Core\Grid\BaseGrid
 {
-	/**
-	 * @var \User\Repository\UserRepository
-	 */
-	protected $UserRepository;
-
 	public function __construct
 	(
-		\User\Repository\UserRepository $UserRepository
+		private readonly Explorer $Database,
+		private readonly UserModel $UserModel,
+		private readonly User $User
 	)
 	{
-		$this->UserRepository = $UserRepository;
 	}
 
-	public function createComponentGrid(): \Ublaboo\DataGrid\DataGrid
+
+	public function createComponentGrid(): Datagrid
 	{
 		$grid = $this->getGrid();
 
-		$grid->setDataSource($this->UserRepository->getTable());
+		$grid->setDataSource($this->Database->table('user')->order('lastname, firstname'));
+
+		$grid->addColumnText('login', 'Login')
+			->setAlign('center')
+			->setSortable()
+			->setFilterText();
 
 		$grid->addColumnText('lastname', 'Příjmení')
 			->setAlign('center')
@@ -33,25 +44,42 @@ class UserGrid extends \Core\Grid\BaseGrid
 			->setSortable()
 			->setFilterText();
 
-		$grid->addColumnText('email', 'Email')
+		$grid->addColumnText('email', 'E-mail')
 			->setAlign('center')
 			->setSortable()
 			->setFilterText();
 
-		$grid->addColumnText('role', 'Pravomoc')
-			->setRenderer(function($item)
-			{
-				return implode(", ", \Nette\Utils\Json::decode($item->role));
-			})
-			->setAlign('center')
-			->setSortable()
-			->setFilterText();
+		$grid->addAction('edit', '', ':User:User:edit')
+			->setClass('btn btn-outline-secondary btn-sm')
+			->setTitle('Upravit uživatele')
+			->setIcon('edit');
 
-		$grid->addAction('edit', '', 'User:userForm')
-			->setTitle('Upravit')
-			->setIcon('edit')
-			->setClass('btn btn-sm btn-warning');
+		$grid->addActionCallback('delete', '')
+			->setClass('btn btn-outline-danger btn-sm')
+			->setTitle('Smazat uživatele')
+			->setIcon('trash')
+			->setConfirmation(new StringConfirmation('Opravdu smazat uživatele %s?', 'login'))
+			->onClick[] = [$this, 'delete'];
+
+		// Vlastní účet smazat nejde
+		$grid->allowRowsAction('delete', fn(ActiveRow $item) => $item->id !== $this->User->getId());
 
 		return $grid;
+	}
+
+
+	public function delete(int|string $id): void
+	{
+		if((int) $id === $this->User->getId())
+		{
+			$this->getPresenter()->flashMessage('Vlastní účet nelze smazat', 'warning');
+		}
+		else
+		{
+			$this->UserModel->delete((int) $id);
+			$this->getPresenter()->flashMessage('Uživatel smazán', 'success');
+		}
+
+		$this->getPresenter()->redirect('this');
 	}
 }

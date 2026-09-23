@@ -1,28 +1,20 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Admin\Form;
 
-use \Nette\Application\UI\Form;
+use ModulIS\Form\Form;
 
-class TeamForm extends \Core\Form\BaseForm
+class TeamForm extends \ModulIS\Form\FormComponent
 {
-	/**
-	 * @var \Nette\Database\Explorer
-	 */
-	protected $Database;
-
-	/**
-	 * @var int|null
-	 */
-	private $id;
-
-
 	public function __construct
 	(
-		\Nette\Database\Explorer $Database
+		private ?int $id,
+		private \Nette\Database\Explorer $Database
 	)
 	{
-		$this->Database = $Database;
+
 	}
 
 
@@ -34,8 +26,14 @@ class TeamForm extends \Core\Form\BaseForm
 				->where('id', $this->id)
 				->fetch();
 
+			if(!$teamRow)
+			{
+				$this->getPresenter()->flashMessage('Neexistující záznam', 'warning');
+				$this->getPresenter()->redirect(':Admin:Team:');
+			}
+
 			$this->getComponent('form')
-				->setDefaults($teamRow);
+				->setDefaults($teamRow->toArray());
 		}
 	}
 
@@ -44,18 +42,40 @@ class TeamForm extends \Core\Form\BaseForm
 	{
 		$form = $this->getForm();
 
-		$form->addText('name', 'Název')
-			->setHtmlAttribute('class', 'form-control')
+		$form->addText('name', 'Název', null, 50)
 			->setRequired();
 
+		$form->addText('color', 'Barva')
+			->setHtmlType('color')
+			->setDefaultValue('#33ccff')
+			->setRequired()
+			->addRule($form::Pattern, 'Zadejte barvu ve formátu #rrggbb', '#[0-9a-fA-F]{6}');
+
+		$form->addInteger('position', 'Pozice')
+			/* nativní bublina prohlížeče, HTML by se vypsalo doslova – Bootstrap Tooltip v bundlu není */
+			->setTooltip('Pořadí ve výpisu docházky, od nejmenšího čísla. Domácí tým nahoru, hosté dolů; při shodě rozhoduje abeceda.')
+			->setDefaultValue($this->id ? 0 : $this->getNextPosition())
+			->setRequired()
+			->addRule($form::Range, 'Pozice musí být mezi %d a %d', [0, 999]);
+
 		$form->addCheckbox('active', 'Zobrazovat')
-			->setHtmlAttribute('class', 'form-control');
+			->setDefaultValue(true);
 
 		$form->addSubmit('save', 'Uložit');
 
 		$form->onSuccess[] = [$this, 'successForm'];
 
 		return $form;
+	}
+
+
+	/**
+	 * Nový tým se zařadí na konec, ať nepřebije stávající pořadí
+	 */
+	private function getNextPosition(): int
+	{
+		return (int) $this->Database->table('team')
+			->max('position') + 1;
 	}
 
 
@@ -75,13 +95,5 @@ class TeamForm extends \Core\Form\BaseForm
 
 		$this->getPresenter()->flashMessage('Uloženo', 'success');
 		$this->getPresenter()->redirect(':Admin:Team:');
-	}
-
-
-	public function setId(?int $id): self
-	{
-		$this->id = $id;
-
-		return $this;
 	}
 }

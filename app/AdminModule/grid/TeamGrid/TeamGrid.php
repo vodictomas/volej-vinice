@@ -1,29 +1,31 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Admin\Grid;
 
 class TeamGrid extends \Core\Grid\BaseGrid
 {
-	/**
-	 * @var \Nette\Database\Explorer
-	 */
-	protected $Database;
-
-
 	public function __construct
 	(
-		\Nette\Database\Explorer $Database
+		protected \Nette\Database\Explorer $Database
 	)
 	{
-		$this->Database = $Database;
 	}
 
 
-	public function createComponentGrid(): \Ublaboo\DataGrid\DataGrid
+	public function createComponentGrid(): \Contributte\Datagrid\Datagrid
 	{
 		$grid = $this->getGrid();
 
-		$grid->setDataSource($this->Database->table('team')->order('name'));
+		$grid->setDataSource($this->Database->table('team'));
+
+		/* při shodné pozici rozhoduje abeceda, stejně jako ve veřejném výpisu */
+		$grid->setDefaultSort(['position' => 'ASC', 'name' => 'ASC']);
+
+		$grid->addColumnNumber('position', 'Pozice')
+			->setAlign('center')
+			->setSortable();
 
 		$grid->addColumnText('name', 'Název')
 			->setAlign('center')
@@ -33,16 +35,13 @@ class TeamGrid extends \Core\Grid\BaseGrid
 		$filterArray = ['' => 'Vše', '0' => 'Ne', '1' => 'Ano'];
 
 		$grid->addColumnText('active', 'Zobrazit')
-			->setRenderer(function($item)
-			{
-				return $item->active ? 'Ano' : 'Ne';
-			})
+			->setRenderer(fn($item) => $item->active ? 'Ano' : 'Ne')
 			->setAlign('center')
 			->setSortable()
 			->setFilterSelect($filterArray);
 
 		$grid->addAction('edit', '', ':Admin:Team:edit')
-			->setClass('btn btn-warning btn-sm')
+			->setClass('btn btn-outline-secondary btn-sm')
 			->setTitle('Upravit tým')
 			->setIcon('edit');
 

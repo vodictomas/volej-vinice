@@ -4,3 +4,7 @@ www/dist/*
 temp/*
 nbproject/*
 app/config/local.neon
+/.idea
+deployment/deployment.ini
+deployment/*.log
+.htdeployment

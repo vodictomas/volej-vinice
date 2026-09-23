@@ -1,0 +1,43 @@
+name: CI
+
+# Workflow se spouští sám podle těchto událostí – nikde se nic "nezapíná".
+# Stačí, aby soubor byl v .github/workflows/ na výchozí větvi.
+on:
+  pull_request:
+  push:
+    branches: [main, dev]
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: PHPStan + coding standard
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      # PHP 8.4 kvůli "php": ">= 8.4" a config.platform.php v composer.json.
+      # Rozšíření odpovídají ext-* požadavkům balíčků v composer.lock.
+      - name: Nastavit PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: ctype, curl, iconv, json, mbstring, openssl, pdo, simplexml, tokenizer, xmlwriter, zlib
+          coverage: none
+
+      # Instaluje včetně dev závislostí (phpstan, ecs) a cachuje je.
+      - name: Nainstalovat závislosti
+        uses: ramsey/composer-install@v4
+
+      # Preset je připnutý natvrdo – bez něj si ho ecs odvodí z verze PHP
+      # na runneru a kontrola by se mohla časem nepozorovaně změnit.
+      - name: Coding standard (modul-is)
+        run: php vendor/bin/ecs check app --preset php84
+
+      # !cancelled() = pustí se, i když předchozí krok selhal, ať v jednom
+      # běhu vidíš obě chyby najednou a nemusíš to opravovat na dvakrát.
+      - name: PHPStan
+        if: ${{ !cancelled() }}
+        run: php vendor/bin/phpstan analyse --no-progress --memory-limit=512M

@@ -1,170 +1,105 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace User\Form;
 
-use Nette\Application\UI\Form;
+use ModulIS\Form\Form;
+use ModulIS\Form\FormComponent;
+use Nette\Utils\ArrayHash;
+use User\Model\UserModel;
 
-class UserForm extends \Core\Form\BaseForm
+class UserForm extends FormComponent
 {
-	/**
-	 * @var \Core\Manager\MailManager
-	 */
-	private $MailManager;
-	
-	/**
-	 * @var \Nette\Security\Passwords
-	 */
-	private $Passwords;
-
-	/**
-	 * @var \User\Repository\UserRepository
-	 */
-	private $UserRepository;
-
-	/**
-	 * @var string
-	 */
-	private $appDir;
-
-	/**
-	 * @var int|null
-	 */
-	private $id;
-
 	public function __construct
 	(
-		$appDir,
-		\User\Repository\UserRepository $UserRepository,
-		\Nette\Security\Passwords $Passwords,
-		\Core\Manager\MailManager $MailManager
+		private ?int $id,
+		private readonly UserModel $UserModel
 	)
 	{
-		$this->UserRepository = $UserRepository;
-		$this->Passwords = $Passwords;
-		$this->appDir = $appDir;
-		$this->MailManager = $MailManager;
 	}
+
 
 	public function prepare(): void
 	{
 		if($this->id)
 		{
-			$userEntity = $this->UserRepository->getByID($this->id);
+			$userRow = $this->UserModel->getById($this->id);
 
-			if($userEntity)
+			if(!$userRow)
 			{
-				$this['form']->setDefaults($userEntity->toArray());
+				$this->getPresenter()->flashMessage('Neexistující záznam', 'warning');
+				$this->getPresenter()->redirect(':User:User:');
 			}
-		}
-		else
-		{
-			$this['form']['password']->setDefaultValue($this->generatePassword());
+
+			$this->getComponent('form')
+				->setDefaults([
+					'login' => $userRow->login,
+					'email' => $userRow->email,
+					'firstname' => $userRow->firstname,
+					'lastname' => $userRow->lastname
+				]);
 		}
 	}
+
 
 	public function createComponentForm(): Form
 	{
 		$form = $this->getForm();
 
-		$form->addText('login', 'Login')
-			->setHtmlAttribute('class', 'form-control')
+		$form->addText('login', 'Login', null, 50)
+			->setRequired();
+
+		$form->addEmail('email', 'E-mail', 100)
 			->setRequired()
-			->addRule(function($input)
-			{
-				$criteria = ['login' => $input->getValue()];
+			->setTooltip('Slouží pro obnovení zapomenutého hesla');
 
-				if($this->id)
-				{
-					$criteria['id != ?'] = $this->id;
-				}
+		$form->addText('firstname', 'Jméno', null, 50)
+			->setRequired();
 
-				return !boolval($this->UserRepository->getBy($criteria));
-			}, 'Tento login již existuje');
+		$form->addText('lastname', 'Příjmení', null, 50)
+			->setRequired();
 
-		if(!$this->id)
+		$password = $form->addPassword('password', $this->id ? 'Nové heslo' : 'Heslo')
+			->setHtmlAttribute('autocomplete', 'new-password')
+			->setRequired(!$this->id);
+
+		$password->addCondition($form::Filled)
+			->addRule($form::MinLength, 'Heslo musí mít alespoň %d znaků', SetPasswordForm::PasswordMinLength);
+
+		if($this->id)
 		{
-			$form->addText('password', 'Heslo')
-				->setHtmlAttribute('class', 'form-control')
-				->setRequired();
+			$password->setTooltip('Vyplňte jen pokud chcete heslo změnit');
 		}
-
-		$form->addText('firstname', 'Jméno')
-			->setHtmlAttribute('class', 'form-control')
-			->setRequired();
-
-		$form->addText('lastname', 'Příjmení')
-			->setHtmlAttribute('class', 'form-control')
-			->setRequired();
-
-		$form->addEmail('email', 'Email')
-			->setHtmlAttribute('class', 'form-control')
-			->setRequired()
-			->addRule(function($input)
-			{
-				$criteria = ['email' => $input->getValue()];
-
-				if($this->id)
-				{
-					$criteria['id != ?'] = $this->id;
-				}
-
-				return !boolval($this->UserRepository->getBy($criteria));
-			}, 'Uživatel s tímto emailem je již zaregistrovnaý');
-
-		$form->addCheckboxList('role', 'Role', ['admin' => 'Admin', 'customer' => 'Zákazník'])
-			->setRequired();
 
 		$form->addSubmit('save', 'Uložit');
 
+		$form->onValidate[] = [$this, 'validateForm'];
 		$form->onSuccess[] = [$this, 'successForm'];
 
 		return $form;
 	}
 
-	public function successForm(Form $form, \Nette\Utils\ArrayHash $values): void
+
+	public function validateForm(Form $form, ArrayHash $values): void
 	{
-		if($this->id)
+		if(!$this->UserModel->isUnique('login', $values->login, $this->id))
 		{
-			$userEntity = $this->UserRepository->getByID($this->id);
-		}
-		else
-		{
-			$userEntity = new \User\Entity\UserEntity;
-
-			$userEntity->password = $this->Passwords->hash($values->password);
+			$form->addError('Tento login už používá jiný uživatel');
 		}
 
-		$userEntity->login = $values->login;
-		$userEntity->email = $values->email;
-		$userEntity->firstname = $values->firstname;
-		$userEntity->lastname = $values->lastname;
-		$userEntity->role = $values->role;
-		
-		$this->UserRepository->save($userEntity);
-
-		if(!$this->id)
+		if(!$this->UserModel->isUnique('email', $values->email, $this->id))
 		{
-			$mail = (new \User\Mail\UserMail)
-				->setRecipient($values->email)
-				->setParams(['login' => $userEntity->login, 'password' => $values->password, 'create' => true])
-				->setObjectId($userEntity->id);
-
-			$this->MailManager->saveAndSendEmail($mail);
+			$form->addError('Tento e-mail už používá jiný uživatel');
 		}
+	}
 
-		$this->getPresenter()->flashMessage('Úspěšně uloženo', 'success');
+
+	public function successForm(Form $form, ArrayHash $values): void
+	{
+		$this->UserModel->save($this->id, (array) $values);
+
+		$this->getPresenter()->flashMessage('Uloženo', 'success');
 		$this->getPresenter()->redirect(':User:User:');
-	}
-
-	private function generatePassword(): string
-	{
-		return substr(bin2hex(openssl_random_pseudo_bytes(10)), 0, 10);
-	}
-
-	public function setId(?string $id): self
-	{
-		$this->id = $id ? intval($id) : null;
-
-		return $this;
 	}
 }

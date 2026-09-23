@@ -1,28 +1,28 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace AdminModule;
 
-class TeamPresenter extends \Core\Presenter\AuthPresenter
+use Admin\Form\TeamForm;
+use Admin\Form\TeamFormFactory;
+use Admin\Grid\TeamGrid;
+use Admin\Grid\TeamGridFactory;
+use Core\Presenter\AuthPresenter;
+use Nette\DI\Attributes\Inject;
+
+class TeamPresenter extends AuthPresenter
 {
-	/**
-	 * @inject
-	 * @var \Admin\Form\TeamFormFactory
-	 */
-	public $TeamFormFactory;
+	#[Inject]
+	public TeamFormFactory $TeamFormFactory;
 
-	/**
-	 * @inject
-	 * @var \Admin\Grid\TeamGridFactory
-	 */
-	public $TeamGridFactory;
+	#[Inject]
+	public TeamGridFactory $TeamGridFactory;
 
-	/**
-	 * @var int|null
-	 */
-	private $id;
+	private ?int $id = null;
 
 
-	public function actionEdit(string $id = null)
+	public function actionEdit(?int $id = null)
 	{
 		if(!$id)
 		{
@@ -35,6 +35,7 @@ class TeamPresenter extends \Core\Presenter\AuthPresenter
 		$this->getComponent('teamForm')
 			->prepare();
 
+		$this->template->id = $id;
 		$this->setView('form');
 	}
 
@@ -43,18 +44,18 @@ class TeamPresenter extends \Core\Presenter\AuthPresenter
 	{
 		$this->id = null;
 
+		$this->template->id = null;
 		$this->setView('form');
 	}
 
-	  
-	protected function createComponentTeamForm(): \Admin\Form\TeamForm
+
+	protected function createComponentTeamForm(): TeamForm
 	{
-		return $this->TeamFormFactory->create()
-			->setId($this->id);
+		return $this->TeamFormFactory->create($this->id);
 	}
 
 
-	protected function createComponentTeamGrid(): \Admin\Grid\TeamGrid
+	protected function createComponentTeamGrid(): TeamGrid
 	{
 		return $this->TeamGridFactory->create();
 	}

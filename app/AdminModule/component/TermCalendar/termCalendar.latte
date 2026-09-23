@@ -1,0 +1,68 @@
+<div class="vv-panel vv-calendar">
+	<div class="vv-calendar-head">
+		<a n:href="this, month => $prevMonth" class="btn btn-outline-secondary btn-sm" title="Předchozí měsíc" aria-label="Předchozí měsíc">
+			<span class="fa-solid fa-chevron-left fa-fw"></span>
+		</a>
+
+		<strong class="vv-calendar-title">{$monthLabel}</strong>
+
+		<a n:href="this, month => $nextMonth" class="btn btn-outline-secondary btn-sm" title="Další měsíc" aria-label="Další měsíc">
+			<span class="fa-solid fa-chevron-right fa-fw"></span>
+		</a>
+
+		<a n:href="this, month => ''" n:class="btn, btn-outline-secondary, btn-sm, vv-calendar-today, $monthKey === $currentMonth ? disabled">
+			Dnes
+		</a>
+	</div>
+
+	<div class="vv-calendar-scroll">
+		<table class="vv-calendar-grid">
+			<thead>
+				<tr>
+					<th n:foreach="$dayNameArray as $dayName" scope="col">{$dayName}</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr n:foreach="$weekArray as $dayList">
+					{foreach $dayList as $day}
+						{var $dayKey = $day->format('Y-m-d')}
+						{var $termRow = $termArray[$dayKey] ?? null}
+
+						<td n:class="
+							vv-calendar-day,
+							$day->format('Y-m') !== $monthKey ? is-outside,
+							$dayKey === $today ? is-today
+						">
+							<span class="vv-calendar-date">{$day->format('j')}</span>
+
+							{if $termRow}
+								{var $count = $countArray[$termRow->id]}
+
+								{* z komponenty musí odkaz na akci presenteru přes plink, n:href by se bral jako signál *}
+								<a href="{plink :Admin:Term:edit, id => $termRow->id}"
+									n:class="vv-calendar-term, !$termRow->available ? is-cancelled"
+									title="{if $termRow->available}Trénink{else}Zrušený trénink{/if} {$dayKey|date:'j. n. Y'} – upravit">
+
+									<span class="vv-calendar-term-label">
+										{if $termRow->available}Trénink{else}Zrušeno{/if}
+									</span>
+
+									<span n:if="$termRow->available" class="vv-calendar-term-count">
+										{$count['yes']} přijde{if $count['waiting']}, {$count['waiting']} neví{/if}
+									</span>
+								</a>
+							{/if}
+						</td>
+					{/foreach}
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<p class="vv-calendar-legend">
+		<span class="vv-calendar-key"></span> trénink se koná
+		<span class="vv-calendar-key is-cancelled"></span> zrušeno
+		<span class="vv-calendar-note">Klikem na termín se dostanete do jeho úpravy.</span>
+	</p>
+</div>

@@ -1,72 +1,46 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace User\Form;
+
+use Nette\Application\UI\Form;
+use Nette\Utils\ArrayHash;
+use User\Model\UserModel;
 
 class ResetPasswordForm extends \Core\Form\BaseForm
 {
-
-	/**
-	 * @var \Nette\Application\LinkGenerator
-	 */
-	private $LinkGenerator;
-
-	/**
-	 * @var \Core\Manager\MailManager
-	 */
-	private $MailManager;
-
-	/**
-	 * @var \User\Repository\UserRepository
-	 */
-	private $UserRepository;
-
 	public function __construct
 	(
-		\User\Repository\UserRepository $UserRepository,
-		\Core\Manager\MailManager $MailManager,
-		\Nette\Application\LinkGenerator $LinkGenerator
+		private readonly UserModel $UserModel
 	)
 	{
-		$this->UserRepository = $UserRepository;
-		$this->MailManager = $MailManager;
-		$this->LinkGenerator = $LinkGenerator;
 	}
 
-	public function createComponentForm(): \Nette\Application\UI\Form
+
+	protected function createComponentForm(): Form
 	{
 		$form = $this->getForm();
 
-		$form->addEmail('email', 'Zadejte Váš zaregistrovaný email')
+		$form->addEmail('email', 'Zadejte e-mail uvedený u Vašeho účtu')
 			->setHtmlAttribute('class', 'form-control')
-			->addRule(function($input)
-			{
-				return boolval($this->UserRepository->getBy(['email' => $input->getValue()]));
-			}, 'Nenalezen žádný uživatel s tímto emailem')
-			->setRequired();
+			->setHtmlAttribute('placeholder', 'E-mail')
+			->setRequired('Zadejte e-mail');
 
-		$form->addSubmit('reset', 'Resetovat heslo');
+		$form->addSubmit('reset', 'Odeslat odkaz');
 
 		$form->onSuccess[] = [$this, 'successForm'];
 
 		return $form;
 	}
 
-	public function successForm(\Nette\Application\UI\Form $form, \Nette\Utils\ArrayHash $values): void
+
+	public function successForm(Form $form, ArrayHash $values): void
 	{
-		$userEntity = $this->UserRepository->getBy(['email' => $values->email]);
+		$this->UserModel->sendResetLink($values->email);
 
-		$hashids = new \Hashids\Hashids(\User\Mail\ResetPasswordMail::SALT, 20);
-
-		$hash = $hashids->encode($userEntity->id, (new \Nette\Utils\DateTime)->format('His'));
-
-		$mail = (new \User\Mail\ResetPasswordMail)
-			->setRecipient($values->email)
-			->setParams(['hash' => $hash])
-			->setObjectId($userEntity->id);
-
-		$this->MailManager->saveAndSendEmail($mail);
-
-		$this->getPresenter()->flashMessage('Na zadaný email byly odeslány pokyny pro resetování hesla', 'success');
+		// Stejná hláška i pro neexistující e-mail, aby nešlo zjišťovat registrované adresy
+		$this->getPresenter()->flashMessage('Pokud u některého účtu tento e-mail evidujeme, poslali jsme na něj odkaz pro nastavení nového hesla', 'success');
 		$this->getPresenter()->redirect(':User:Login:');
 	}
 }

@@ -1,22 +1,50 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Admin\Form;
 
+use Admin\Model\AttendanceModel;
+use ModulIS\Form\Form;
+use ModulIS\Form\FormComponent;
 use Nette\Utils\DateTime;
-use Nette\Application\UI\Form;
 
-class TermForm extends \Core\Form\BaseForm
+class TermForm extends FormComponent
 {
-	/**
-	 * @var \Nette\Database\Explorer
-	 */
-	protected $Db;
+	private const DayArray = [
+		1 => 'Pondělí',
+		2 => 'Úterý',
+		3 => 'Středa',
+		4 => 'Čtvrtek',
+		5 => 'Pátek',
+		6 => 'Sobota',
+		0 => 'Neděle'
+	];
+
+	private const DayNameArray = [
+		1 => 'monday',
+		2 => 'tuesday',
+		3 => 'wednesday',
+		4 => 'thursday',
+		5 => 'friday',
+		6 => 'saturday',
+		0 => 'sunday'
+	];
 
 
-	public function __construct(\Nette\Database\Explorer $Db)
+	public function __construct
+	(
+		private \Nette\Database\Explorer $Db,
+		private AttendanceModel $AttendanceModel
+	)
 	{
 
-		$this->Db = $Db;
+	}
+
+
+	public function prepare(): void
+	{
+
 	}
 
 
@@ -24,21 +52,40 @@ class TermForm extends \Core\Form\BaseForm
 	{
 		$form = $this->getForm();
 
-		$form->addText('date_from', 'Vygenerovat termíny od')
-			->setHtmlAttribute('class', 'form-control datepicker')
-			->setHtmlAttribute('autocomplete', 'off')
+		$form->addDate('date_from', 'Vygenerovat termíny od')
 			->setRequired();
 
-		$form->addText('date_to', 'Vygenerovat termíny do')
-			->setHtmlAttribute('class', 'form-control datepicker')
-			->setHtmlAttribute('autocomplete', 'off')
+		$form->addDate('date_to', 'Vygenerovat termíny do')
+			->setRequired();
+
+		$form->addSelect('day', 'Den tréninku', self::DayArray)
+			->setDefaultValue(1)
 			->setRequired();
 
 		$form->addSubmit('save', 'Generovat');
 
+		$form->onValidate[] = [$this, 'validateForm'];
 		$form->onSuccess[] = [$this, 'successForm'];
 
 		return $form;
+	}
+
+
+	public function validateForm(Form $form, \Nette\Utils\ArrayHash $values): void
+	{
+		if($form->hasErrors())
+		{
+			return;
+		}
+
+		if($values->date_from > $values->date_to)
+		{
+			$form->addError('Datum do musí být stejné nebo pozdější než datum od');
+		}
+		elseif(new DateTime($values->date_from)->modify('+1 year') < new DateTime($values->date_to))
+		{
+			$form->addError('Najednou lze vygenerovat termíny maximálně na rok');
+		}
 	}
 
 
@@ -48,49 +95,41 @@ class TermForm extends \Core\Form\BaseForm
 		$dateTo = new DateTime($values->date_to);
 
 		/**
-		 * Find Mondays for date range
+		 * První den tréninku v rozsahu
 		 */
-		if($dateFrom->format('w') === '1')
+		if((int) $dateFrom->format('w') !== $values->day)
 		{
-			$dateFromMonday = $dateFrom;
-		}
-		else
-		{
-			$dateFromMonday = $dateFrom->modify('next monday');
+			$dateFrom->modify('next ' . self::DayNameArray[$values->day]);
 		}
 
-		if($dateTo->format('w') === '1')
+		$existingDateArray = $this->Db->table('term')
+			->where('date >= ?', $dateFrom->format('Y-m-d'))
+			->where('date <= ?', $dateTo->format('Y-m-d'))
+			->fetchPairs(null, 'date');
+
+		$existingDateArray = array_map(fn($date) => $date->format('Y-m-d'), $existingDateArray);
+
+		$created = 0;
+
+		$this->Db->transaction(function() use ($dateFrom, $dateTo, $existingDateArray, &$created)
 		{
-			$dateToMonday = $dateTo->modify('+1 day');
-		}
-		else
-		{
-			$dateToMonday = $dateTo->modify('next monday');
-		}
-
-		$dateRange = new \DatePeriod($dateFromMonday, \DateInterval::createFromDateString('1 week'), $dateToMonday);
-
-		/**
-		 * Prefilled attendance
-		 */
-		$prefillPairs = $this->Db->table('player')
-			->select('id')
-			->where('prefill', 1)
-			->fetchPairs(null, 'id');
-
-		foreach($dateRange as $dateTerm)
-		{
-			$termRow = $this->Db->table('term')
-				->insert([['date' => $dateTerm->format('Y-m-d')]]);
-
-			foreach($prefillPairs as $playerId)
+			for($date = $dateFrom; $date <= $dateTo; $date = $date->modifyClone('+1 week'))
 			{
-				$this->Db->table('attendance')
-					->insert(['term_id' => $termRow->id, 'player_id' => $playerId, 'type' => \Admin\Dial\AttendanceTypeDial::YES]);
-			}
-		}
+				if(in_array($date->format('Y-m-d'), $existingDateArray, true))
+				{
+					continue;
+				}
 
-		$this->getPresenter()->flashMessage('Termíny vygenerovány', 'success');
+				$termRow = $this->Db->table('term')
+					->insert(['date' => $date->format('Y-m-d')]);
+
+				$this->AttendanceModel->prefillTerm($termRow->id);
+
+				$created++;
+			}
+		});
+
+		$this->getPresenter()->flashMessage('Vygenerováno termínů: ' . $created, 'success');
 		$this->getPresenter()->redirect(':Admin:Term:');
 	}
 }

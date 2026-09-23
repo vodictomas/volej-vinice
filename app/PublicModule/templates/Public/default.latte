@@ -1,55 +1,77 @@
 {layout '../@layout.latte'}
 
+{block title}Plánování volejbalů{/block}
+
 {block content}
-<center>
-<table>
+<br>
+<h2>&nbsp;<img src="{$basePath}/images/icon.png" alt="">&nbsp; Volejbal na Vinicích, tělocvična 7. ZŠ. - Pondělí 20:00</h2>
+
+<span style="margin-left: 10px;">
+	Stránka s <a target="_blank" href="{$basePath}/dochazka.htm">docházkou a platbama</a>
+	- číslo konta <b>51-9126890257/0100</b>
+	<br><br>
+</span>
+
+<span style="margin-left: 10px; font-weight: bold;">Novinka</span>:<br><br>
+
+<table style="margin: 0 auto;">
 	<tbody>
 		<tr>
-			<td>
-				<table cellspacing="0" cellpadding="0" class="rozpis">
+			<td n:snippet="attendance">
+				<table class="rozpis">
 					<thead>
 						<tr>
 							<td style="width: 30px;">&nbsp;</td>
 							<td class="rozpis_ct">&nbsp;</td>
 							{foreach $termArray as $term => $available}
-								<td colspan="2" class="{if $available}rozpis_dny{else}rozpis_dny_mimo{/if}">{$term|date:'d.m.'}</td>
+								<td colspan="2" class="{if $available}rozpis_dny{else}rozpis_dny_mimo{/if}">
+									{$term|date:'j.n.'}
+								</td>
 							{/foreach}
 						</tr>
 					</thead>
 					<tbody>
-						{foreach $teamArray as $teamId => $teamName}
-							{continueIf !isset($playerArray[$teamId])}
-							<tr>
-								<td style="background-color: orange;font-weight:bold;" rowspan="{count($playerArray[$teamId])}">
-									{$teamName}
-								</td>
-								{foreach $playerArray[$teamId] as $playerId => $player}
-									<td class="rozpis_clovekA">{$player}</td>
+						{foreach $teamSelection as $teamRow}
+							{continueIf !isset($playerArray[$teamRow->id])}
+							{foreach $playerArray[$teamRow->id] as $playerId => $player}
+								<tr>
+									<td n:if="$iterator->isFirst()" style="background-color: {$teamRow->color|color|noescape};font-weight:bold;width: 30px;" rowspan="{count($playerArray[$teamRow->id])}">
+										{foreach mb_str_split($teamRow->name) as $char}{if $char === ' '}&nbsp;{else}{$char}{/if}<br n:if="!$iterator->isLast()">{/foreach}
+									</td>
+									<td class="rozpis_clovekA" style="background-color: {$teamRow->color|color|noescape};">
+										{$player}
+									</td>
 									{foreach $termArray as $term => $available}
 										{if $available}
-											<td style="border-right:1px solid gray;" class="rozpis_ct yes ">
-												<span id="{php echo '_' . $playerId . '-' . $term . '_2';}">
-													<a href="javascript:void(0);" onclick="pp3.select('{$term}', '{$playerId}', '{php echo '_' . $playerId . '-' . $term . '_2'}');" class="yes">
-														{ifset $attendanceArray[$term][$playerId]}
-															{var $icon = \Admin\Dial\AttendanceTypeDial::translateIcon($attendanceArray[$term][$playerId]->type)}
-															<img src="{$basePath}/images/{$icon}">
-														{else}
-															<img src="{$basePath}/images/question.jpg">
-														{/ifset}
-													</a>
-												</span>
+											{var $attendanceRow = $attendanceArray[$term][$playerId] ?? null}
+											{var $locked = $termLockedArray[$term]}
+											<td style="border-right:1px solid gray;" n:class="rozpis_ct, $locked ? hotovo">
+												{capture $typeIcon}
+													{if $attendanceRow}
+														<img src="{$basePath}/images/{\Admin\Dial\AttendanceTypeDial::translateIcon($attendanceRow->type)}">
+													{else}
+														<img src="{$basePath}/images/otaznik2.jpg">
+													{/if}
+												{/capture}
+												{if $locked}
+													{$typeIcon}
+												{else}
+													<a class="attendance" data-player-id="{$playerId}" data-term="{$term}">{$typeIcon}</a>
+												{/if}
 											</td>
-											<td style="border-left:0px solid gray;" class="rozpis_pivo_ct ">
-												<span id="_5-1641164400">
-													<a href="javascript:void(0);" onclick="pp2.select('1641164400', '5', '_5-1641164400');" class="nevim_pivo">
-														{ifset $attendanceArray[$term][$playerId]}
-															{var $icon = \Admin\Dial\AttendanceReasonDial::translateIcon($attendanceArray[$term][$playerId]->reason)}
-															<img src="{$basePath}/images/{$icon}">
-														{else}
-															<img src="{$basePath}/images/question.jpg">
-														{/ifset}
-													</a>
-												</span>
+											<td style="border-left:0px solid gray;" n:class="rozpis_pivo_ct, $locked ? hotovo">
+												{capture $reasonIcon}
+													{if $attendanceRow && $attendanceRow->reason}
+														<img src="{$basePath}/images/{\Admin\Dial\AttendanceReasonDial::translateIcon($attendanceRow->reason)}" title="{($pubReasonArray + $excuseReasonArray)[$attendanceRow->reason] ?? ''}">
+													{else}
+														<img src="{$basePath}/images/otaznik3.jpg">
+													{/if}
+												{/capture}
+												{if $locked}
+													{$reasonIcon}
+												{else}
+													<a class="attendance-reason" data-player-id="{$playerId}" data-term="{$term}">{$reasonIcon}</a>
+												{/if}
 											</td>
 										{else}
 											<td colspan="2" class="volejbal_neni">Vol. neni</td>
@@ -84,11 +106,144 @@
 					<br>
 					<span style="font-size: 80%;">
 						<span style="font-weight: bold;">*</span>
-						Deadline pro přihlašování (tj. kdy už to musí být jasné): <strong>Pondělí 20:00</strong>
+						Deadline pro přihlašování (tj. kdy už to musí být jasné): <strong>Pondělí {$deadline}</strong>
 					</span>
 				</div>
 			</td>
 		</tr>
 	</tbody>
 </table>
-</center>
+
+<div id="reason-popup" class="picker-popup" data-player-id="" data-term="">
+	<table class="reason-picker">
+		<tr>
+			<td>Hospa</td>
+			<td n:foreach="$pubReasonArray as $reason => $text" class="click">
+				<a class="reason-confirm" data-reason="{$reason}" data-note="{$text}">
+					<img src="{$basePath}/images/{\Admin\Dial\AttendanceReasonDial::translateIcon($reason)}" alt="{$text}">
+				</a>
+			</td>
+		</tr>
+		<tr>
+			<td>Výmluva</td>
+			<td n:foreach="$excuseReasonArray as $reason => $text" class="click">
+				<a class="reason-confirm" data-reason="{$reason}" data-note="{$text}">
+					<img src="{$basePath}/images/{\Admin\Dial\AttendanceReasonDial::translateIcon($reason)}" alt="{$text}">
+				</a>
+			</td>
+			<td colspan="{count($pubReasonArray) - count($excuseReasonArray)}">&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Uvidim</td>
+			<td class="click">
+				<a class="reason-confirm" data-reason="{\Admin\Dial\AttendanceReasonDial::WAITING}" data-note="Uvidim až na místě.">
+					<img src="{$basePath}/images/question.jpg" alt="Uvidim až na místě.">
+				</a>
+			</td>
+			<td colspan="{count($pubReasonArray) - 1}">&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="{count($pubReasonArray) + 1}" class="reason-note" id="reason-note">&nbsp;</td>
+		</tr>
+	</table>
+</div>
+
+<style>
+	.picker-popup { position: absolute; display: none; z-index: 10; }
+	.reason-picker { background: #FFFFFF; border: 1px solid black; border-collapse: collapse; }
+	.reason-picker td { border: 1px solid gray; padding: 0 2px; }
+	.reason-picker td.click:hover { outline: 1px solid blue; }
+	.reason-picker a, .attendance, .attendance-reason, .attendance-confirm { cursor: pointer; }
+	.reason-note { font-size: 80%; height: 1.2em; }
+</style>
+
+<div id="attendance-popup" class="picker-popup" data-player-id="" data-term="">
+	<table style="background-color: #ffffcc; border: 1px solid black; border-collapse: collapse;">
+		<tr>
+			<td style="padding: 4px;">
+				<a class="attendance-confirm" data-attendance="{\Admin\Dial\AttendanceTypeDial::YES}">
+					<img src="{$basePath}/images/fajfka3.jpg">
+				</a>
+			</td>
+			<td style="border: 1px solid #000;padding: 4px;">
+				Přijdu
+			</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid #000;padding: 4px;">
+				<a class="attendance-confirm" data-attendance="{\Admin\Dial\AttendanceTypeDial::NO}">
+					<img src="{$basePath}/images/ft_disabled.gif">
+				</a>
+			</td>
+			<td style="border: 1px solid #000;padding: 4px;">
+				Nemůžu
+			</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid #000;padding: 4px;">
+				<a class="attendance-confirm" data-attendance="{\Admin\Dial\AttendanceTypeDial::WAITING}">
+					<img src="{$basePath}/images/otaznik2.jpg">
+				</a>
+			</td>
+			<td style="border: 1px solid #000;padding: 4px;">
+				Nevim
+			</td>
+		</tr>
+	</table>
+</div>
+
+{control chat}
+
+{define #js}
+	<script n:nonce>
+		const attendancePopup = document.getElementById('attendance-popup');
+		const reasonPopup = document.getElementById('reason-popup');
+		const reasonNote = document.getElementById('reason-note');
+
+		const hidePopups = () => {
+			attendancePopup.style.display = 'none';
+			reasonPopup.style.display = 'none';
+		};
+
+		const openPopup = (popup, cell, e) => {
+			hidePopups();
+			popup.style.left = e.pageX + 'px';
+			popup.style.top = e.pageY + 'px';
+			popup.style.display = 'block';
+			popup.dataset.playerId = cell.dataset.playerId;
+			popup.dataset.term = cell.dataset.term;
+		};
+
+		const save = (link, popup, params) => {
+			hidePopups();
+			params = new URLSearchParams({ term: popup.dataset.term, playerId: popup.dataset.playerId, ...params });
+			naja.makeRequest('POST', link + '&' + params.toString(), null, { history: false });
+		};
+
+		// Delegace přes document, tabulka se po uložení překresluje snippetem
+		document.addEventListener('click', (e) => {
+			const attendanceCell = e.target.closest('.attendance');
+			const reasonCell = e.target.closest('.attendance-reason');
+			const attendanceConfirm = e.target.closest('.attendance-confirm');
+			const reasonConfirm = e.target.closest('.reason-confirm');
+
+			if (attendanceCell) {
+				openPopup(attendancePopup, attendanceCell, e);
+			} else if (reasonCell) {
+				openPopup(reasonPopup, reasonCell, e);
+			} else if (attendanceConfirm) {
+				save({link saveAttendance!}, attendancePopup, { attendance: attendanceConfirm.dataset.attendance });
+			} else if (reasonConfirm) {
+				save({link saveReason!}, reasonPopup, { reason: reasonConfirm.dataset.reason });
+			} else if (!attendancePopup.contains(e.target) && !reasonPopup.contains(e.target)) {
+				hidePopups();
+			}
+		});
+
+		// Popis volby při najetí myší
+		reasonPopup.addEventListener('mouseover', (e) => {
+			const option = e.target.closest('.reason-confirm');
+			reasonNote.textContent = option ? option.dataset.note : ' ';
+		});
+	</script>
+{/define}

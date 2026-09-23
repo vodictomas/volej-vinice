@@ -1,56 +1,62 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace User\Form;
+
+use Nette\Application\UI\Form;
+use Nette\Security\AuthenticationException;
+use Nette\Security\User;
+use Nette\Utils\ArrayHash;
 
 class LoginForm extends \Core\Form\BaseForm
 {
-	/**
-	 * @var \Nette\Security\User
-	 */
-	protected $User;
-
 	public function __construct
 	(
-		\Nette\Security\User $User
+		private readonly User $User
 	)
 	{
-		$this->User = $User;
 	}
-	
-	public function createComponentForm()
+
+
+	protected function createComponentForm(): Form
 	{
 		$form = $this->getForm();
-		
+
 		$form->addText('login', 'Login')
 			->setHtmlAttribute('class', 'form-control')
-			->setRequired()
-			->setHtmlAttribute('placeholder', 'Zadejte přihlašovací jméno');
-		
+			->setHtmlAttribute('placeholder', 'Přihlašovací jméno')
+			->setHtmlAttribute('autocomplete', 'username')
+			->setRequired('Zadejte přihlašovací jméno');
+
 		$form->addPassword('password', 'Heslo')
 			->setHtmlAttribute('class', 'form-control')
-			->setRequired()
-			->setHtmlAttribute('placeholder', 'Zadejte heslo');
-		
+			->setHtmlAttribute('placeholder', 'Heslo')
+			->setHtmlAttribute('autocomplete', 'current-password')
+			->setRequired('Zadejte heslo');
+
 		$form->addSubmit('submit', 'Přihlásit');
-		
+
 		$form->onSuccess[] = [$this, 'formSuccess'];
-		
+
 		return $form;
 	}
-	
-	public function formSuccess($form, $values)
+
+
+	public function formSuccess(Form $form, ArrayHash $values): void
 	{
-		try 
+		try
 		{
 			$this->User->login($values->login, $values->password);
 		}
-		catch(\Nette\Security\AuthenticationException $exc)
+		catch(AuthenticationException $exc)
 		{
-			$this->getPresenter()->flashMessage($exc->getMessage(), 'warning');
-			$this->getPresenter()->redirect('this');
+			$form->addError($exc->getMessage());
+
+			return;
 		}
 
 		$this->getPresenter()->flashMessage('Úspěšně přihlášeno', 'success');
-		$this->getPresenter()->redirect(':Admin:Homepage:');
+		$this->getPresenter()->redirect(':Admin:Admin:');
 	}
 }

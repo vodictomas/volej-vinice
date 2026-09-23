@@ -3,11 +3,26 @@
 {/define}
 
 {define toolbox}
-	<a n:href="form" class="btn btn-outline-info">
-		{icon plus-circle}
+	<a n:href="form" class="btn btn-primary">
+		<span class="fa-solid fa-plus-circle fa-fw"></span>
 		Vygenerovat termíny
 	</a>
 {/define}
 
 {block content}
-	{control termGrid}
+	<nav class="vv-tabs" aria-label="Zobrazení termínů">
+		<a n:href="default, tab => $tabGrid" n:class="vv-tab, $tab === $tabGrid ? is-active" aria-current={$tab === $tabGrid ? 'page'}>
+			<span class="fa-solid fa-table-list fa-fw"></span>
+			Seznam
+		</a>
+		<a n:href="default, tab => $tabCalendar" n:class="vv-tab, $tab === $tabCalendar ? is-active" aria-current={$tab === $tabCalendar ? 'page'}>
+			<span class="fa-solid fa-calendar-days fa-fw"></span>
+			Kalendář
+		</a>
+	</nav>
+
+	{if $tab === $tabCalendar}
+		{control termCalendar}
+	{else}
+		{control termGrid}
+	{/if}

@@ -1,0 +1,1174 @@
+/**
+ * Téma administrace.
+ *
+ * Tenká vrstva nad Bootstrapem 5. Datagrid i renderer formulářů z ModulIS sypou
+ * bootstrapové značkování, takže se laděním --bs-* proměnných propíše vzhled
+ * i tam, kam nemáme přístup do šablony.
+ */
+
+/* ---------------------------------------------------------------- tokeny */
+
+:root
+{
+	--vv-chrome: #1b2030;
+	--vv-chrome-muted: #9aa3b8;
+	--vv-canvas: #f1f3f7;
+	--vv-surface: #fff;
+	--vv-border: #e2e6ee;
+	--vv-text: #1f2430;
+	--vv-muted: #6b7385;
+	--vv-accent: #4453c4;
+	--vv-accent-soft: #eef0fc;
+	--vv-danger: #b8303c;
+	--vv-danger-soft: #fdecee;
+	--vv-radius: 0.6rem;
+	--vv-shadow: 0 1px 2px rgb(24 28 40 / 6%), 0 4px 12px rgb(24 28 40 / 5%);
+
+	--vv-sidebar-width: 15rem;
+	--vv-topbar-height: 3.25rem;
+
+	/* Bootstrap přebírá naše barvy, ať sedí i cizí komponenty */
+	--bs-primary: var(--vv-accent);
+	--bs-primary-rgb: 68, 83, 196;
+	--bs-body-color: var(--vv-text);
+	--bs-body-bg: var(--vv-canvas);
+	--bs-border-color: var(--vv-border);
+	--bs-border-radius: var(--vv-radius);
+	--bs-border-radius-sm: 0.4rem;
+	--bs-link-color: var(--vv-accent);
+	--bs-link-color-rgb: 68, 83, 196;
+	--bs-link-hover-color: #333f9e;
+	--bs-secondary-color: var(--vv-muted);
+}
+
+/* ------------------------------------------------------------------ base */
+
+body
+{
+	font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	color: var(--vv-text);
+	background: var(--vv-canvas);
+	-webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6
+{
+	font-weight: 600;
+	letter-spacing: -0.01em;
+	color: var(--vv-text);
+}
+
+.btn
+{
+	--bs-btn-font-weight: 500;
+	--bs-btn-border-radius: 0.45rem;
+	--bs-btn-padding-x: 0.9rem;
+}
+
+.btn:focus-visible,
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus
+{
+	box-shadow: 0 0 0 0.2rem rgb(68 83 196 / 20%);
+	border-color: var(--vv-accent);
+}
+
+.btn-primary
+{
+	--bs-btn-bg: var(--vv-accent);
+	--bs-btn-border-color: var(--vv-accent);
+	--bs-btn-hover-bg: #3a48ad;
+	--bs-btn-hover-border-color: #3a48ad;
+	--bs-btn-active-bg: #333f9e;
+	--bs-btn-active-border-color: #333f9e;
+}
+
+/* -------------------------------------------------------------- app shell */
+
+.app
+{
+	min-height: 100vh;
+}
+
+/* horní lišta */
+
+.app-topbar
+{
+	position: fixed;
+	inset: 0 0 auto 0;
+	z-index: 1030;
+	display: flex;
+	align-items: center;
+	height: var(--vv-topbar-height);
+	padding: 0 1rem;
+	color: #fff;
+	background: var(--vv-chrome);
+}
+
+.app-brand
+{
+	display: flex;
+	align-items: center;
+	gap: 0.55rem;
+	width: var(--vv-sidebar-width);
+	margin-right: 0.5rem;
+	font-size: 1rem;
+	font-weight: 600;
+	color: #fff;
+	text-decoration: none;
+	letter-spacing: -0.01em;
+}
+
+.app-brand:hover
+{
+	color: #fff;
+}
+
+.app-brand img
+{
+	width: 1.35rem;
+	height: 1.35rem;
+}
+
+.app-topbar-actions
+{
+	display: flex;
+	gap: 0.25rem;
+	align-items: center;
+	margin-left: auto;
+}
+
+.app-topbar-actions a
+{
+	padding: 0.35rem 0.7rem;
+	font-size: 0.875rem;
+	color: var(--vv-chrome-muted);
+	text-decoration: none;
+	border-radius: 0.4rem;
+}
+
+.app-topbar-actions a:hover
+{
+	color: #fff;
+	background: rgb(255 255 255 / 8%);
+}
+
+.app-topbar-user
+{
+	color: #fff;
+	opacity: 0.55;
+}
+
+/* přepínač menu na mobilu */
+
+.app-menu-toggle
+{
+	display: none;
+	align-items: center;
+	justify-content: center;
+	width: 2.25rem;
+	height: 2.25rem;
+	padding: 0;
+	margin-right: 0.5rem;
+	color: #fff;
+	background: none;
+	border: 0;
+	border-radius: 0.4rem;
+}
+
+.app-menu-toggle:hover
+{
+	background: rgb(255 255 255 / 8%);
+}
+
+.app-menu-toggle span,
+.app-menu-toggle span::before,
+.app-menu-toggle span::after
+{
+	display: block;
+	width: 1.05rem;
+	height: 2px;
+	background: currentcolor;
+	border-radius: 2px;
+}
+
+.app-menu-toggle span
+{
+	position: relative;
+}
+
+.app-menu-toggle span::before,
+.app-menu-toggle span::after
+{
+	position: absolute;
+	content: "";
+}
+
+.app-menu-toggle span::before { top: -0.35rem; }
+.app-menu-toggle span::after  { top: 0.35rem; }
+
+/* boční menu */
+
+.app-sidebar
+{
+	position: fixed;
+	top: var(--vv-topbar-height);
+	bottom: 0;
+	left: 0;
+	z-index: 1020;
+	width: var(--vv-sidebar-width);
+	padding: 0.85rem 0.6rem;
+	overflow-y: auto;
+	background: var(--vv-surface);
+	border-right: 1px solid var(--vv-border);
+}
+
+.app-nav
+{
+	display: flex;
+	flex-direction: column;
+	gap: 0.15rem;
+}
+
+.app-nav a
+{
+	display: flex;
+	gap: 0.65rem;
+	align-items: center;
+	padding: 0.5rem 0.7rem;
+	font-size: 0.9375rem;
+	font-weight: 500;
+	color: var(--vv-text);
+	text-decoration: none;
+	border-radius: 0.45rem;
+}
+
+.app-nav a .fa-solid
+{
+	color: var(--vv-muted);
+}
+
+.app-nav a:hover
+{
+	background: var(--vv-canvas);
+}
+
+.app-nav a.is-active
+{
+	color: var(--vv-accent);
+	background: var(--vv-accent-soft);
+}
+
+.app-nav a.is-active .fa-solid
+{
+	color: var(--vv-accent);
+}
+
+/* obsah */
+
+.app-main
+{
+	padding: calc(var(--vv-topbar-height) + 1.5rem) 1.75rem 3rem;
+	margin-left: var(--vv-sidebar-width);
+}
+
+.page-head
+{
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 1.25rem;
+}
+
+.page-title
+{
+	margin: 0;
+	font-size: 1.4rem;
+}
+
+.page-actions
+{
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+}
+
+/* ----------------------------------------------------------------- panely */
+
+.card,
+.vv-panel
+{
+	background: var(--vv-surface);
+	border: 1px solid var(--vv-border);
+	border-radius: var(--vv-radius);
+	box-shadow: var(--vv-shadow);
+}
+
+.vv-panel
+{
+	padding: 0.25rem 0.85rem;
+}
+
+.vv-panel .datagrid > :last-child
+{
+	margin-bottom: 0;
+}
+
+.card
+{
+	--bs-card-border-color: var(--vv-border);
+	--bs-card-cap-bg: #fafbfd;
+}
+
+/* ModulIS obaluje formulář do .card – zúžíme ho, ať se popisky a pole nerozjedou */
+.form-horizontal > .row > .col-12
+{
+	max-width: 46rem;
+}
+
+.card.mt-2
+{
+	margin-top: 0 !important;
+}
+
+.card-body
+{
+	padding: 1.35rem 1.5rem 0.6rem;
+}
+
+.card-footer
+{
+	padding: 0.9rem 1.5rem;
+	background: #fafbfd;
+	border-top: 1px solid var(--vv-border);
+}
+
+/* ------------------------------------------------------------ rozcestník */
+
+.tile-grid
+{
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+	gap: 0.85rem;
+	max-width: 58rem;
+}
+
+.tile
+{
+	display: flex;
+	flex-direction: column;
+	gap: 0.15rem;
+	padding: 1.1rem 1.2rem;
+	color: var(--vv-text);
+	text-decoration: none;
+	background: var(--vv-surface);
+	border: 1px solid var(--vv-border);
+	border-radius: var(--vv-radius);
+	box-shadow: var(--vv-shadow);
+	transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.tile:hover
+{
+	border-color: var(--vv-accent);
+	transform: translateY(-1px);
+}
+
+.tile .fa-solid
+{
+	margin-bottom: 0.5rem;
+	font-size: 1.35rem;
+	color: var(--vv-accent);
+}
+
+.tile-note
+{
+	font-size: 0.8125rem;
+	color: var(--vv-muted);
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+	.tile
+	{
+		transition: none;
+	}
+
+	.tile:hover
+	{
+		transform: none;
+	}
+}
+
+/* -------------------------------------------------------------- formuláře */
+
+.col-form-label,
+.form-label
+{
+	font-size: 0.9375rem;
+	font-weight: 500;
+	color: var(--vv-text);
+}
+
+/* povinné pole – ModulIS dává labelu třídu .required */
+.col-form-label.required::after,
+.form-label.required::after,
+.form-check-label.required::after
+{
+	color: #c2374d;
+	content: " *";
+}
+
+.form-control,
+.form-select
+{
+	padding: 0.45rem 0.75rem;
+	border-color: #d7dce7;
+	border-radius: 0.45rem;
+}
+
+.form-control::placeholder
+{
+	color: #a6adbd;
+}
+
+.form-check-input:checked
+{
+	background-color: var(--vv-accent);
+	border-color: var(--vv-accent);
+}
+
+.form-text,
+.text-muted
+{
+	font-size: 0.8125rem;
+	color: var(--vv-muted) !important;
+}
+
+.invalid-feedback,
+.form-control.is-invalid ~ .invalid-feedback
+{
+	display: block;
+	font-size: 0.8125rem;
+}
+
+.is-invalid
+{
+	border-color: #c2374d;
+}
+
+/* barevný vstup (barva týmu) – v .input-group by se roztáhl přes celou šířku */
+.form-control[type="color"]
+{
+	flex: 0 0 auto;
+	width: 4.5rem;
+	padding: 0.25rem;
+}
+
+/* ---------------------------------------------------------------- tabulky */
+
+.datagrid table
+{
+	--bs-table-bg: transparent;
+	--bs-table-border-color: var(--vv-border);
+
+	margin-bottom: 0;
+	font-size: 0.9375rem;
+}
+
+.datagrid table thead th
+{
+	padding: 0.7rem 0.75rem;
+	font-size: 0.8125rem;
+	font-weight: 600;
+	color: var(--vv-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+	background: transparent;
+	border-bottom: 1px solid var(--vv-border);
+}
+
+.datagrid table thead th a
+{
+	color: var(--vv-muted);
+	text-decoration: none;
+}
+
+.datagrid table thead th a:hover
+{
+	color: var(--vv-accent);
+}
+
+.datagrid table tbody td
+{
+	padding: 0.65rem 0.75rem;
+	vertical-align: middle;
+	border-bottom: 1px solid #f0f2f6;
+}
+
+.datagrid table tbody tr:last-child td
+{
+	border-bottom: 0;
+}
+
+/* datagrid si vynucuje .table-bordered – svislé linky nechceme */
+.datagrid table.table-bordered > :not(caption) > * > *
+{
+	border-right-width: 0;
+	border-left-width: 0;
+}
+
+.datagrid table.table-striped > tbody > tr:nth-of-type(odd) > *
+{
+	--bs-table-accent-bg: transparent;
+	--bs-table-bg-type: transparent;
+
+	box-shadow: none;
+}
+
+.datagrid table.table-hover > tbody > tr:hover > *
+{
+	--bs-table-accent-bg: #f7f8fb;
+	--bs-table-bg-type: #f7f8fb;
+}
+
+/**
+ * Filtry vykreslené nad tabulkou (TermGrid). Datagrid je skládá bootstrapovým
+ * gridem, kde popisek zabírá čtvrtinu šířky – na dva filtry je to zbytečně
+ * rozevláté, takže je stáhneme k sobě.
+ */
+.datagrid .row-filters
+{
+	padding: 0.85rem 0.75rem;
+	margin-bottom: 0.25rem;
+	border-bottom: 1px solid var(--vv-border);
+}
+
+.datagrid .row-filters .datagrid-row-outer-filters-group
+{
+	max-width: 26rem;
+}
+
+/* popisek a pole vedle sebe místo bootstrapových col-sm-3 / col-sm-9 */
+.datagrid .row-filters .datagrid-row-outer-filters-group > .row
+{
+	display: flex;
+	flex-wrap: nowrap;
+	gap: 0.65rem;
+	align-items: center;
+	margin: 0;
+}
+
+.datagrid .row-filters .datagrid-row-outer-filters-group > .row > *
+{
+	flex: 1 1 auto;
+	width: auto;
+	min-width: 0;
+	max-width: none;
+	padding: 0;
+}
+
+.datagrid .row-filters .form-label
+{
+	flex: 0 0 auto;
+	margin-bottom: 0;
+	font-size: 0.875rem;
+	font-weight: 500;
+	color: var(--vv-muted);
+	white-space: nowrap;
+}
+
+/* filtrační řádek */
+.datagrid table thead .form-control,
+.datagrid table thead .form-select
+{
+	font-size: 0.875rem;
+	font-weight: 400;
+	color: var(--vv-text);
+	text-transform: none;
+	letter-spacing: 0;
+}
+
+/* sloupec s akcemi drží tlačítka u sebe */
+.datagrid .col-action
+{
+	width: 1%;
+	white-space: nowrap;
+	text-align: right;
+}
+
+.datagrid .col-action .btn
+{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	padding: 0;
+	font-size: 0.9375rem;
+}
+
+.datagrid .col-action .btn + .btn
+{
+	margin-left: 0.25rem;
+}
+
+/**
+ * Patička gridu. Datagrid tam dává tři divy s třídami .col-*, ale bez obalové
+ * .row, takže bootstrapový grid nezabere. Rozložíme je plovoucími bloky –
+ * flexbox na buňce s colspan=5 ruší slučování sloupců.
+ */
+.datagrid td.row-grid-bottom
+{
+	padding: 0.75rem;
+	font-size: 0.875rem;
+	color: var(--vv-muted);
+	border-top: 1px solid var(--vv-border);
+}
+
+.datagrid .row-grid-bottom::after
+{
+	display: table;
+	clear: both;
+	content: "";
+}
+
+.datagrid .row-grid-bottom > div
+{
+	width: auto;
+	padding: 0;
+	margin: 0;
+}
+
+.datagrid .col-items
+{
+	float: left;
+	line-height: 2;
+}
+
+.datagrid .col-per-page
+{
+	display: flex;
+	float: right;
+	gap: 0.4rem;
+	align-items: center;
+}
+
+.datagrid .col-per-page select
+{
+	width: auto;
+	padding-right: 2rem;
+}
+
+/* odesílací tlačítko počtu položek řeší autosubmit */
+.datagrid .datagrid-per-page-submit
+{
+	display: none;
+}
+
+.datagrid .pagination
+{
+	--bs-pagination-border-radius: 0.4rem;
+	--bs-pagination-color: var(--vv-text);
+	--bs-pagination-active-bg: var(--vv-accent);
+	--bs-pagination-active-border-color: var(--vv-accent);
+	--bs-pagination-font-size: 0.875rem;
+
+	margin-bottom: 0;
+}
+
+/* datagrid dává „Vymazat filtry“ napevno btn-danger, což je na tuhle akci moc */
+.datagrid .reset-filter.btn-danger
+{
+	--bs-btn-bg: transparent;
+	--bs-btn-color: var(--vv-muted);
+	--bs-btn-border-color: var(--vv-border);
+	--bs-btn-hover-bg: #fbeced;
+	--bs-btn-hover-color: #b02a37;
+	--bs-btn-hover-border-color: #e9b9be;
+
+	font-size: 0.8125rem;
+}
+
+/* ------------------------------------------------------ flash a prázdný stav */
+
+.flash-messages
+{
+	position: fixed;
+	top: calc(var(--vv-topbar-height) + 0.75rem);
+	right: 1rem;
+	z-index: 1080;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	max-width: min(24rem, calc(100vw - 2rem));
+}
+
+.flash-messages .alert
+{
+	margin-bottom: 0;
+	box-shadow: var(--vv-shadow);
+	animation: vv-flash-in 0.2s ease-out;
+}
+
+@keyframes vv-flash-in
+{
+	from { opacity: 0; transform: translateY(-0.4rem); }
+	to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+	.flash-messages .alert
+	{
+		animation: none;
+	}
+}
+
+/* ---------------------------------------------------------- chybová stránka */
+
+.error-page
+{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+	padding: 2rem 1rem;
+}
+
+.error-card
+{
+	width: 100%;
+	max-width: 30rem;
+	padding: 2.5rem 2rem;
+	text-align: center;
+	background: var(--vv-surface);
+	border: 1px solid var(--vv-border);
+	border-radius: var(--vv-radius);
+	box-shadow: var(--vv-shadow);
+}
+
+.error-ball
+{
+	width: 100%;
+	max-width: 15rem;
+	height: auto;
+	margin-bottom: 0.5rem;
+}
+
+.error-ball-shadow
+{
+	fill: rgb(24 28 40 / 8%);
+}
+
+.error-ball-body
+{
+	fill: #fff;
+	stroke: var(--vv-text);
+	stroke-width: 4;
+	stroke-linejoin: round;
+}
+
+.error-ball-seam
+{
+	fill: none;
+	stroke: var(--vv-muted);
+	stroke-width: 3;
+	stroke-linecap: round;
+}
+
+.error-ball-hole
+{
+	fill: var(--vv-text);
+}
+
+.error-ball-air
+{
+	fill: none;
+	stroke: var(--vv-accent);
+	stroke-width: 3;
+	stroke-linecap: round;
+	opacity: 0.7;
+}
+
+.error-code
+{
+	margin-bottom: 0.15rem;
+	font-size: 0.8125rem;
+	font-weight: 600;
+	color: var(--vv-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+}
+
+.error-card h1
+{
+	margin-bottom: 0.6rem;
+	font-size: 1.5rem;
+}
+
+.error-note
+{
+	margin-bottom: 1.5rem;
+	color: var(--vv-muted);
+}
+
+/* ------------------------------------------------------------- přihlášení */
+
+.login
+{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+	padding: 2rem 1rem;
+}
+
+.login-card
+{
+	width: 100%;
+	max-width: 22rem;
+	padding: 2rem;
+	background: var(--vv-surface);
+	border: 1px solid var(--vv-border);
+	border-radius: var(--vv-radius);
+	box-shadow: var(--vv-shadow);
+}
+
+.login-brand
+{
+	display: flex;
+	gap: 0.55rem;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 1.5rem;
+	font-size: 1.15rem;
+	font-weight: 600;
+}
+
+.login-brand img
+{
+	width: 1.5rem;
+	height: 1.5rem;
+}
+
+.login-card h1
+{
+	margin-bottom: 1.25rem;
+	font-size: 1.05rem;
+	font-weight: 600;
+	text-align: center;
+}
+
+.login-card .form-control
+{
+	padding: 0.55rem 0.8rem;
+}
+
+.login-card .btn-link
+{
+	font-size: 0.875rem;
+	color: var(--vv-muted);
+	text-decoration: none;
+}
+
+.login-card .btn-link:hover
+{
+	color: var(--vv-accent);
+}
+
+/* ---------------------------------------------------------------- záložky */
+
+.vv-tabs
+{
+	display: flex;
+	gap: 0.25rem;
+	width: fit-content;
+	padding: 0.25rem;
+	margin-bottom: 1rem;
+	background: var(--vv-surface);
+	border: 1px solid var(--vv-border);
+	border-radius: var(--vv-radius);
+	box-shadow: var(--vv-shadow);
+}
+
+.vv-tab
+{
+	display: inline-flex;
+	gap: 0.45rem;
+	align-items: center;
+	padding: 0.45rem 0.9rem;
+	font-size: 0.875rem;
+	font-weight: 500;
+	color: var(--vv-muted);
+	text-decoration: none;
+	border-radius: 0.45rem;
+	transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.vv-tab:hover
+{
+	color: var(--vv-text);
+	background: var(--vv-canvas);
+}
+
+.vv-tab.is-active
+{
+	color: var(--vv-accent);
+	background: var(--vv-accent-soft);
+}
+
+/* -------------------------------------------------------------- kalendář */
+
+.vv-calendar
+{
+	padding: 1rem 1.1rem 1.1rem;
+}
+
+.vv-calendar-head
+{
+	display: flex;
+	gap: 0.4rem;
+	align-items: center;
+	margin-bottom: 0.9rem;
+}
+
+.vv-calendar-title
+{
+	min-width: 9.5rem;
+	font-size: 1.05rem;
+	text-align: center;
+}
+
+.vv-calendar-today
+{
+	margin-left: auto;
+}
+
+.vv-calendar-scroll
+{
+	overflow-x: auto;
+}
+
+.vv-calendar-grid
+{
+	width: 100%;
+	table-layout: fixed;
+	border-collapse: collapse;
+}
+
+.vv-calendar-grid th
+{
+	padding: 0 0.35rem 0.45rem;
+	font-size: 0.75rem;
+	font-weight: 600;
+	color: var(--vv-muted);
+	text-align: left;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+.vv-calendar-day
+{
+	height: 5.5rem;
+	padding: 0.3rem;
+	vertical-align: top;
+	border: 1px solid var(--vv-border);
+}
+
+.vv-calendar-day.is-outside
+{
+	background: #fafbfd;
+}
+
+.vv-calendar-date
+{
+	display: block;
+	margin-bottom: 0.25rem;
+	font-size: 0.8125rem;
+	color: var(--vv-muted);
+}
+
+.vv-calendar-day.is-outside .vv-calendar-date
+{
+	color: #b9c0d0;
+}
+
+.vv-calendar-day.is-today .vv-calendar-date
+{
+	width: 1.5rem;
+	height: 1.5rem;
+	font-weight: 600;
+	line-height: 1.5rem;
+	color: #fff;
+	text-align: center;
+	background: var(--vv-accent);
+	border-radius: 50%;
+}
+
+.vv-calendar-term
+{
+	display: block;
+	padding: 0.3rem 0.4rem;
+	color: var(--vv-accent);
+	text-decoration: none;
+	background: var(--vv-accent-soft);
+	border: 1px solid transparent;
+	border-left: 3px solid var(--vv-accent);
+	border-radius: 0.3rem;
+	transition: border-color 0.15s ease;
+}
+
+.vv-calendar-term:hover
+{
+	border-color: var(--vv-accent);
+}
+
+.vv-calendar-term.is-cancelled
+{
+	color: var(--vv-danger);
+	background: var(--vv-danger-soft);
+	border-left-color: var(--vv-danger);
+}
+
+.vv-calendar-term.is-cancelled:hover
+{
+	border-color: var(--vv-danger);
+}
+
+.vv-calendar-term-label
+{
+	display: block;
+	font-size: 0.8125rem;
+	font-weight: 600;
+}
+
+.vv-calendar-term.is-cancelled .vv-calendar-term-label
+{
+	text-decoration: line-through;
+}
+
+.vv-calendar-term-count
+{
+	display: block;
+	font-size: 0.75rem;
+	color: var(--vv-muted);
+}
+
+.vv-calendar-legend
+{
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35rem;
+	align-items: center;
+	margin: 0.9rem 0 0.2rem;
+	font-size: 0.75rem;
+	color: var(--vv-muted);
+}
+
+.vv-calendar-key
+{
+	width: 0.7rem;
+	height: 0.7rem;
+	background: var(--vv-accent-soft);
+	border-left: 3px solid var(--vv-accent);
+	border-radius: 0.2rem;
+}
+
+.vv-calendar-key.is-cancelled
+{
+	background: var(--vv-danger-soft);
+	border-left-color: var(--vv-danger);
+}
+
+.vv-calendar-note
+{
+	margin-left: auto;
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+	.vv-tab,
+	.vv-calendar-term
+	{
+		transition: none;
+	}
+}
+
+/* -------------------------------------------------------------- responzivní */
+
+@media (max-width: 991.98px)
+{
+	.app-menu-toggle
+	{
+		display: flex;
+	}
+
+	.app-brand
+	{
+		width: auto;
+	}
+
+	.app-sidebar
+	{
+		transform: translateX(-100%);
+		transition: transform 0.2s ease;
+	}
+
+	.app-sidebar.is-open
+	{
+		box-shadow: var(--vv-shadow);
+		transform: none;
+	}
+
+	.app-main
+	{
+		padding-inline: 1rem;
+		margin-left: 0;
+	}
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+	.app-sidebar
+	{
+		transition: none;
+	}
+}
+
+@media (max-width: 575.98px)
+{
+	.app-topbar-user
+	{
+		display: none;
+	}
+
+	.card-body,
+	.card-footer
+	{
+		padding-inline: 1rem;
+	}
+
+	/* popisek nad polem, ať se na úzkém displeji vejde */
+	.form-horizontal .col-form-label
+	{
+		padding-bottom: 0.15rem;
+	}
+
+	/* sedm sloupců se na mobil nevejde, radši vodorovné posouvání než nečitelná drť */
+	.vv-calendar-grid
+	{
+		min-width: 33rem;
+	}
+
+	.vv-calendar-note
+	{
+		width: 100%;
+		margin-left: 0;
+	}
+}
