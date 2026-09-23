@@ -37,7 +37,7 @@ class UserForm extends FormComponent
 					'login' => $userRow->login,
 					'email' => $userRow->email,
 					'firstname' => $userRow->firstname,
-					'lastname' => $userRow->lastname,
+					'lastname' => $userRow->lastname
 				]);
 		}
 	}

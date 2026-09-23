@@ -45,7 +45,7 @@ class UserManager implements Authenticator
 		return new SimpleIdentity($userRow->id, null, [
 			'login' => $userRow->login,
 			'firstname' => $userRow->firstname,
-			'lastname' => $userRow->lastname,
+			'lastname' => $userRow->lastname
 		]);
 	}
 }

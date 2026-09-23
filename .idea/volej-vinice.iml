@@ -74,6 +74,10 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/dg/adminer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ergebnis/agent-detector" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php84" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dg/ftp-deployment" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/paragonie/constant_time_encoding" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/paragonie/random_compat" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpseclib/phpseclib" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

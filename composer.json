@@ -21,14 +21,15 @@
 		"kravcik/latte-font-awesome-icon": "^1",
 		"ublaboo/datagrid": "^7.2",
 		"modul-is/form": "^1",
-		"composer/composer": "^2.0",
         "contributte/webpack": "^2.1",
-		"dg/adminer": "^3.4"
+		"dg/adminer": "^3.4",
+		"dg/ftp-deployment": "^3.7"
 	},
 	"require-dev": {
         "modul-is/coding-standard": "^5",
         "phpstan/phpstan-nette": "^2.0",
-        "friendsofphp/php-cs-fixer": "^3.86"
+        "friendsofphp/php-cs-fixer": "^3.86",
+		"composer/composer": "^2.0"
 	},
 	"autoload": {
 		"classmap": ["app/Bootstrap.php"]

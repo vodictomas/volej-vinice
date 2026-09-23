@@ -18,7 +18,7 @@ class TermForm extends FormComponent
 		4 => 'Čtvrtek',
 		5 => 'Pátek',
 		6 => 'Sobota',
-		0 => 'Neděle',
+		0 => 'Neděle'
 	];
 
 	private const DayNameArray = [
@@ -28,7 +28,7 @@ class TermForm extends FormComponent
 		4 => 'thursday',
 		5 => 'friday',
 		6 => 'saturday',
-		0 => 'sunday',
+		0 => 'sunday'
 	];
 
 
@@ -82,7 +82,7 @@ class TermForm extends FormComponent
 		{
 			$form->addError('Datum do musí být stejné nebo pozdější než datum od');
 		}
-		elseif((new DateTime($values->date_from))->modify('+1 year') < new DateTime($values->date_to))
+		elseif(new DateTime($values->date_from)->modify('+1 year') < new DateTime($values->date_to))
 		{
 			$form->addError('Najednou lze vygenerovat termíny maximálně na rok');
 		}

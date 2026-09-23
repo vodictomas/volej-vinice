@@ -39,7 +39,7 @@ class BaseGrid extends \Nette\Application\UI\Control
 			'contributte_datagrid.show_filter' => 'Zobrazit filtr',
 			'contributte_datagrid.hide_column' => 'Skrýt sloupec',
 			'contributte_datagrid.multiselect_choose' => 'Vyberte',
-			'contributte_datagrid.multiselect_selected' => 'Vybrané položky',
+			'contributte_datagrid.multiselect_selected' => 'Vybrané položky'
 		]);
 
 		$grid->setTranslator($trans);
