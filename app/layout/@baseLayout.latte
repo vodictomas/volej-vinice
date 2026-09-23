@@ -2,18 +2,13 @@
 <html lang="cs">
 	<head>
 		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<title>
-			{ifset header}{include header|striptags}{/ifset}
-		</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="color-scheme" content="light">
 
-		<link rel="stylesheet" type="text/css" href="{webpack app.css}">
+		<title>{ifset #header}{include #header|stripHtml|trim} – {/ifset}Volejbálek</title>
+
+		<link rel="stylesheet" href="{webpack app.css}">
 		<link rel="icon" type="image/gif" href="{$basePath}/images/icon_ball.gif">
-		<style>
-			.flash-messages { position: fixed; top: 10px; right: 10px; z-index: 1050; max-width: 400px; }
-			.login-card { max-width: 380px; margin: 10vh auto 0; padding: 2rem; background: #fff; border: 1px solid #dee2e6; border-radius: .5rem; box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .1); text-align: center; }
-		</style>
 	</head>
 
 	<body>
@@ -27,12 +22,13 @@
 		{ifset #bodyContent}
 			{include #bodyContent}
 		{else}
-			{include content}
+			{* stránky mimo administraci (přihlášení, obnova hesla) *}
+			<main class="login">
+				{include content}
+			</main>
 		{/ifset}
+
 		<script n:nonce src="{webpack app.js}"></script>
-		{ifset #js}
-			{include #js}
-		{/ifset}
+		{ifset #js}{include #js}{/ifset}
 	</body>
 </html>
-

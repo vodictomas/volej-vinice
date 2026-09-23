@@ -1,67 +1,57 @@
 {layout '@baseLayout.latte'}
 
 {define #bodyContent}
-	<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-		<a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" n:href=":Admin:Admin:">
-			Volejbálek
-		</a>
-		<div class="navbar-nav flex-row">
-			<div class="nav-item text-nowrap">
-				<a class="nav-link px-3" n:href=":Public:Public:">
-					Docházka
-				</a>
-			</div>
-			<div class="nav-item text-nowrap">
-				<a class="nav-link px-3" n:href="logout!">
-					Odhlásit ({$user->getIdentity()->login ?? ''})
-				</a>
-			</div>
-		</div>
-	</header>
+	<div class="app">
+		<header class="app-topbar">
+			<button type="button" class="app-menu-toggle" data-menu-toggle aria-label="Menu" aria-controls="appSidebar" aria-expanded="false">
+				<span></span>
+			</button>
 
-	<div class="container-fluid">
-		<div class="row">
-			<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-				<div class="position-sticky pt-3">
-					<ul class="nav flex-column">
-						<li class="nav-item">
-							<a class="nav-link active" aria-current="page" n:href=":Admin:Term:">
-								{icon calendar}
-								Termíny
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link active" aria-current="page" n:href=":Admin:Player:">
-								{icon user}
-								Hráči
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link active" aria-current="page" n:href=":Admin:Team:">
-								{icon users}
-								Týmy
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link active" aria-current="page" n:href=":User:User:">
-								{icon user-shield}
-								Uživatelé
-							</a>
-						</li>
-					</ul>
-				</div>
+			<a class="app-brand" n:href=":Admin:Admin:">
+				<img src="{$basePath}/images/icon_ball.gif" alt="" width="22" height="22">
+				Volejbálek
+			</a>
+
+			<nav class="app-topbar-actions">
+				<a n:href=":Public:Public:">Docházka</a>
+				<a n:href="logout!">Odhlásit <span class="app-topbar-user">{$user->getIdentity()->login ?? ''}</span></a>
 			</nav>
-			<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-					<h1 class="h2">{ifset header}{include header}{/ifset}</h1>
-					{ifset toolbox}
-						<div class="btn-toolbar mb-2 mb-md-0">
-							{include toolbox}
-						</div>
-					{/ifset}
-				</div>
-				{include content}
-			</main>
-		</div>
+		</header>
+
+		<nav id="appSidebar" class="app-sidebar" data-menu>
+			<div class="app-nav">
+				<a n:href=":Admin:Term:" class={[is-active => $presenter->isLinkCurrent(':Admin:Term:*')]}>
+					<span class="fa-solid fa-calendar fa-fw"></span>
+					Termíny
+				</a>
+				<a n:href=":Admin:Player:" class={[is-active => $presenter->isLinkCurrent(':Admin:Player:*')]}>
+					<span class="fa-solid fa-user fa-fw"></span>
+					Hráči
+				</a>
+				<a n:href=":Admin:Team:" class={[is-active => $presenter->isLinkCurrent(':Admin:Team:*')]}>
+					<span class="fa-solid fa-users fa-fw"></span>
+					Týmy
+				</a>
+				<a n:href=":Admin:Message:" class={[is-active => $presenter->isLinkCurrent(':Admin:Message:*')]}>
+					<span class="fa-solid fa-comments fa-fw"></span>
+					Zprávy
+				</a>
+				<a n:href=":User:User:" class={[is-active => $presenter->isLinkCurrent(':User:User:*')]}>
+					<span class="fa-solid fa-user-shield fa-fw"></span>
+					Uživatelé
+				</a>
+			</div>
+		</nav>
+
+		<main class="app-main">
+			<div class="page-head">
+				<h1 class="page-title">{ifset #header}{include #header}{/ifset}</h1>
+				{ifset #toolbox}
+					<div class="page-actions">{include #toolbox}</div>
+				{/ifset}
+			</div>
+
+			{include content}
+		</main>
 	</div>
 {/define}

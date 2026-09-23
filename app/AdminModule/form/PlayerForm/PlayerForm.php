@@ -51,7 +51,7 @@ class PlayerForm extends \ModulIS\Form\FormComponent
 		 * Upravovaný hráč může být v neaktivním týmu
 		 */
 		$teamSelection = $this->Database->table('team')
-			->order('name');
+			->order('position, name');
 
 		if($this->id)
 		{

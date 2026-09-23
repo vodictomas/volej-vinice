@@ -81,6 +81,9 @@ class PublicPresenter extends BasePresenter
 
 		$teamSelection = $this->getTeamSelection();
 
+		/* barva jde rovnou do stylu, tak ji stejně jako v chatu pustíme dál jen ve tvaru #rrggbb */
+		$this->template->addFilter('color', fn(?string $color) => preg_match('~^#[0-9a-fA-F]{6}$~', (string) $color) ? $color : 'inherit');
+
 		$this->template->teamSelection = $teamSelection;
 		$this->template->playerArray = $this->getPlayerArray($teamSelection);
 		$this->template->attendanceArray = $attendanceArray;
@@ -211,7 +214,7 @@ class PublicPresenter extends BasePresenter
 			->where(':player.active', 1)
 			->group('team.id')
 			->having('player_count > 0')
-			->order('team.name');
+			->order('team.position, team.name');
 	}
 
 

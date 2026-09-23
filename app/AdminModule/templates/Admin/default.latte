@@ -1,1 +1,32 @@
+{define header}
+	Přehled
+{/define}
+
 {block content}
+	<div class="tile-grid">
+		<a n:href=":Admin:Term:" class="tile">
+			<span class="fa-solid fa-calendar"></span>
+			<strong>Termíny</strong>
+			<span class="tile-note">Generování tréninků a docházka</span>
+		</a>
+		<a n:href=":Admin:Player:" class="tile">
+			<span class="fa-solid fa-user"></span>
+			<strong>Hráči</strong>
+			<span class="tile-note">Kdo se zobrazuje v docházce</span>
+		</a>
+		<a n:href=":Admin:Team:" class="tile">
+			<span class="fa-solid fa-users"></span>
+			<strong>Týmy</strong>
+			<span class="tile-note">Názvy a barvy týmů</span>
+		</a>
+		<a n:href=":Admin:Message:" class="tile">
+			<span class="fa-solid fa-comments"></span>
+			<strong>Zprávy</strong>
+			<span class="tile-note">Co se píše v chatu</span>
+		</a>
+		<a n:href=":User:User:" class="tile">
+			<span class="fa-solid fa-user-shield"></span>
+			<strong>Uživatelé</strong>
+			<span class="tile-note">Přístup do administrace</span>
+		</a>
+	</div>

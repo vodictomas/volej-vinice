@@ -18,7 +18,14 @@ class TeamGrid extends \Core\Grid\BaseGrid
 	{
 		$grid = $this->getGrid();
 
-		$grid->setDataSource($this->Database->table('team')->order('name'));
+		$grid->setDataSource($this->Database->table('team'));
+
+		/* při shodné pozici rozhoduje abeceda, stejně jako ve veřejném výpisu */
+		$grid->setDefaultSort(['position' => 'ASC', 'name' => 'ASC']);
+
+		$grid->addColumnNumber('position', 'Pozice')
+			->setAlign('center')
+			->setSortable();
 
 		$grid->addColumnText('name', 'Název')
 			->setAlign('center')
@@ -34,7 +41,7 @@ class TeamGrid extends \Core\Grid\BaseGrid
 			->setFilterSelect($filterArray);
 
 		$grid->addAction('edit', '', ':Admin:Team:edit')
-			->setClass('btn btn-warning btn-sm')
+			->setClass('btn btn-outline-secondary btn-sm')
 			->setTitle('Upravit tým')
 			->setIcon('edit');
 

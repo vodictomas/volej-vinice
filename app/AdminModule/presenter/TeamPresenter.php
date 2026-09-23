@@ -35,6 +35,7 @@ class TeamPresenter extends AuthPresenter
 		$this->getComponent('teamForm')
 			->prepare();
 
+		$this->template->id = $id;
 		$this->setView('form');
 	}
 
@@ -43,6 +44,7 @@ class TeamPresenter extends AuthPresenter
 	{
 		$this->id = null;
 
+		$this->template->id = null;
 		$this->setView('form');
 	}
 
