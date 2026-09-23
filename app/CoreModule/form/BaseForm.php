@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Core\Form;
 
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\BaseControl;
 
 class BaseForm extends \Core\Component\BaseComponent
 {
@@ -18,12 +19,17 @@ class BaseForm extends \Core\Component\BaseComponent
 		{
 			foreach($form->getControls() as $control)
 			{
-				if($control->hasErrors())
+				// getControls() vrací Nette\Forms\Control, ale hasErrors()
+				// a setHtmlAttribute() jsou až na BaseControl
+				if(!$control instanceof BaseControl || !$control->hasErrors())
 				{
-					$currentClass = $control->getControl()->attrs['class'] ?? null;
-
-					$control->setHtmlAttribute('class', $currentClass . ' is-invalid');
+					continue;
 				}
+
+				// prototyp místo getControl() – ten klonuje a navíc si značí 'rendered'
+				$currentClass = $control->getControlPrototype()->class;
+
+				$control->setHtmlAttribute('class', $currentClass . ' is-invalid');
 			}
 		};
 
